@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="tick_alloc_form" model="ir.ui.view">
+            <field name="name">tick.alloc.form</field>
+            <field name="type">form</field>
+            <field name="model">ticket.allocation</field>
+            <field name="arch" type="xml">
+	      <form string="Ticket allocation">
+	      <group colspan="4" col="7">
+	               <field name="sales_person_id" required='1'/>  
+	               <field name="alloc_date"/>  
+	               </group>
+                        <notebook colspan='4'>
+                        <page string="Ticket">
+	               <field  mode="tree,form" name="tick_num" nolabel="1" widget="one2many_list">
+	                <form string="Tickets">
+                                <field name="name"/>
+                                <field name="add_tick_id" invisible='1'/>
+                        </form>
+                        <tree string="Tickets">
+                                <field name="name"/>
+                        </tree>
+	               </field>
+	               </page>
+	               </notebook>
+	               <group colspan="4" col="2">
+	               <button name="tick_generation" string="Generate Ticket" type="object" />
+	             </group>
+	       </form>
+	     </field>
+	 </record>
+
+        <record id="tick_alloc_tree" model="ir.ui.view">
+            <field name="name">tick.alloc.tree</field>
+            <field name="type">tree</field>
+            <field name="model">ticket.allocation</field>
+            <field name="arch" type="xml">
+                <tree string ="ticket allocation"> 
+	               		<field name="sales_person_id"/>  
+	               		<field name="alloc_date"/>  
+	               		<field name="tick_num"/>
+                </tree>
+            </field>	
+	</record>
+
+	<record id="action_ticket_allocation_form1" model="ir.actions.act_window">
+            <field name="name">Ticket allocation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticket.allocation</field>
+            <field name="view_type">form</field>   
+            <field name="view_id" ref="tick_alloc_tree"/>              
+        </record>
+
+<menuitem id="base.menu_crm_ticket_allocation" name="Ticket Allocation" action="action_ticket_allocation_form1"
+            parent="base.menu_sales" sequence="3" groups="base.group_sale_manager"/>
+
+            <!--############### SEQ NO ######### -->	
+    <record id="seq_type_ticket_number_id" model="ir.sequence.type">
+            <field name="name">ticket_number</field>
+            <field name="code">ticket.number.seq</field>
+    </record>    
+    <record id="seq_crm_ticket_number_id" model="ir.sequence">
+            <field name="name">ticket number</field>
+            <field name="code">ticket.number.seq</field>
+            <field name="prefix"></field>
+            <field name="padding">5</field>
+    </record>        
+<!--############### SEQ NO ######### -->
+
+
+    <!-- CRM Lead Kanban View  -->
+<!--    <record model="ir.ui.view" id="crm_case_kanban_view_leads">-->
+<!--        <field name="name">Ticket Log Kanban</field>-->
+<!--        <field name="model">ticket.allocation</field>-->
+<!--        <field name="type">kanban</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <kanban>-->
+<!--                <field name="sales_person_id"/>-->
+<!--                <templates>-->
+<!--                <t t_name="kanban-box">-->
+<!--                    <div class="oe_kanban_box">-->
+<!--                        <div class="oe_kanban_box_header">-->
+<!--                           Title-->
+<!--                        </div>-->
+<!--                    <div class="oe_kanban_box_content oe_kanban_box_show_onclick_trigger">-->
+<!--                         Content-->
+<!--                    </div>-->
+<!--                    <div class="oe_kanban_left">-->
+<!--                        <a string="Edit" icon='gkt-edit' type="edit"/>-->
+<!--                        <a string="Change Color" icon="color-picker" type="color" name="color"/>-->
+<!--                        Other Buttons-->
+<!--                        </div>-->
+<!--                        <br class="oe_kanban_clear"/>-->
+<!--                    </div>-->
+<!--             -->
+<!--           </t>-->
+
+<!--                </templates>-->
+<!--            </kanban>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+            
+
+   </data>
+</openerp>

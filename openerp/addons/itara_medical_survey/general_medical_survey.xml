@@ -2,3 +2,62 @@
 <openerp>
     <data>
 
+       <record id="general_medical_form_id" model="ir.ui.view">
+            <field name="name">general.medical.survey.form</field>
+            <field name="type">form</field>
+            <field name="model">general.medical.survey</field>
+            <field name="arch" type="xml">
+	      <form string="General medical">
+	      <group colspan="4" col="7">
+	               <field name="name" required='1'/>  
+	        </group>
+	         <notebook colspan='4'>
+                        <page string="Information">
+                            <field name="age"/>
+                            <field name="telephone"/>
+                            <field name="weight"/>
+                            <field name="height"/>
+                            <field name="approve_diet"/>
+                            <field name="health_ques"/>
+                            <field name="wealth_ques"/>
+                            <field name="medicine_name"/>
+                            <field name="medicine_what"/>
+                            <field name="med_for_depression"/>
+                            <field name="med_for_dep_name"/>
+                            <field name="med_for_dep_amt"/>
+                            
+                        </page>
+            </notebook>
+            </form>
+            </field>
+    </record>
+
+            <record id="general_medical_tree" model="ir.ui.view">
+            <field name="name">general.medical.survey.tree</field>
+            <field name="type">tree</field>
+            <field name="model">general.medical.survey</field>
+            <field name="arch" type="xml">
+                <tree string ="General Medical Survey"> 
+	               		<field name="name"/>  
+	               		<field name="age"/>  
+	               		<field name="telephone"/>
+                </tree>
+            </field>	
+        	</record>
+
+        <record id="general_medical_survey_form1" model="ir.actions.act_window">
+            <field name="name">General medical Survey</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">general.medical.survey</field>
+            <field name="view_type">form</field>   
+            <field name="view_id" ref="general_medical_tree"/>              
+        </record>
+
+        <menuitem id="medical_survey_menu" name="Survey"/>
+        <menuitem
+            action="general_medical_survey_form1"
+            id="menu_general_medical_survey_id"
+            parent="medical_survey_menu" name="General Medical Survey"/>
+        
+   </data>
+</openerp>

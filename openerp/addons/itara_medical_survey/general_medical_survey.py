@@ -32,6 +32,20 @@ class general_medical_survey(osv.osv):
     _name="general.medical.survey"
     _description="Medical Survey for Customer"
     _columns={
-     "name":fields.many2one("res.users", Name)
+     'name':fields.many2one('res.users', 'Name'),
+     'age':fields.char('Age',size=24),
+     'telephone':fields.char('Telephone',size=64),
+     'weight':fields.char('Weight',size=24),
+     'height':fields.char('Height',size=64),
+     'approve_diet':fields.selection([('yes','Yes'),('no','No')],'Approve for diet?'),
+     'health_ques':fields.selection([('yes','Yes'),('no','No'),], 'Are you generally healty person?'),
+     'wealth_ques':fields.selection([('yes','Yes'),('no','No'),], 'Do you take medication regularly'),
+     'medicine_name':fields.char('Medicine Name',size=128),
+     'medicine_what':fields.char('Medicine for what',size=128),
+     'med_for_depression':fields.selection([('yes','Yes'),('no','No'),],'Medicine for Depression?'),
+     'med_for_dep_name':fields.char('Medicine for Depression name',size=128),
+     'med_for_dep_amt':fields.char('Medicine for Depression amount', size=128),
     
     }
+
+general_medical_survey()

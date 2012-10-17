@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+       <record id="medical_quest_survey_form_id" model="ir.ui.view">
+            <field name="name">medical_quest_survey.form</field>
+            <field name="type">form</field>
+            <field name="model">medical.quest.survey</field>
+            <field name="arch" type="xml">
+	      <form string="General medical">
+	      <group colspan="4" col="7">
+	               <field name="name" required='1'/>  
+	        </group>
+	         <notebook colspan='4'>
+                        <page string="Information">
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="letter_text"/>
+                            <field name="quest_sur_id"/>
+                            <field name="private_coach_name"/>
+                            <field name="age"/>
+                            <field name="weight"/>
+                            <field name="sex"/>
+                            <field name="tel_home"/>
+                            <field name="mobile"/>
+                            <field name="fax"/>
+                            <field name="email"/>
+                            <field name="health_fund"/>
+                            <field name="name_doctor"/>
+                            <field name="height"/>
+                            <field name="reg_medication"/>
+                            
+                        </page>
+            </notebook>
+            </form>
+            </field>
+    </record>
+
+            <record id="medical_quest_survey_tree" model="ir.ui.view">
+            <field name="name">medical.quest.survey.tree</field>
+            <field name="type">tree</field>
+            <field name="model">medical.quest.survey</field>
+            <field name="arch" type="xml">
+                <tree string ="General Medical Survey"> 
+	               		<field name="name"/>  
+	               		<field name="date"/>  
+                </tree>
+            </field>	
+        	</record>
+
+        <record id="medical_quest_survey_form1" model="ir.actions.act_window">
+            <field name="name">Medical Questionarie Survey</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">medical.quest.survey</field>
+            <field name="view_type">form</field>   
+            <field name="view_id" ref="medical_quest_survey_tree"/>              
+        </record>
+
+        <menuitem id="medical_survey_menu" name="Survey"/>
+        <menuitem
+            action="medical_quest_survey_form1"
+            id="menu_meical_quest_survey_id"
+            parent="medical_survey_menu" name="Medical Questionnarie Survey" sequence='2'/>
+        
+   </data>
+</openerp>

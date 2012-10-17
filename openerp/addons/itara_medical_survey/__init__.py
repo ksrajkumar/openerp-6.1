@@ -1,0 +1,2 @@
+import general_medical_survey
+import medical_quest_survey

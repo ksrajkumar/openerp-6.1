@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record model="ir.ui.view" id="crm_case_product_lead">
+        	<field name="name">crm.case.product.lead</field>
+        	<field name="model">crm.lead</field>
+        	<field name="type">form</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+	     	<field name="arch" type="xml">
+
+<!-- field hidden in opportunity  -->
+            <field name="planned_revenue" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
+            <field name="probability" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
+            <field name="date_deadline" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
+            <field name="date_action" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
+            <field name="title_action" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
+            <field name="priority" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
+
+<!-- field hidden in opportunity  -->
+		    	<xpath expr='/form/group/button[@string="Schedule/Log Call"]' position='after'>
+		    	<newline/>
+			        <group colspan="5" col="7">
+    			        <field name="birth_date" string="Birth Date" on_change="onchange_birth_date(birth_date)"/>
+    			        <field name="age" string="Age" readonly="1"/>
+    			        <field name="tick_link_id"/>
+                        <field name="id_number"/>
+                        <group colspan='1' col='5'>
+                        <button name="id_generation" string="Generate Id" type="object" />
+                        </group>
+        			</group>
+        			<newline/>
+               </xpath>
+
+        <xpath expr="/form/notebook/page[@string='Lead']/group/field[@name='type_id']" position='before'>
+<!--                <xpath expr="/form/notebook/page[@string='Extra Info']/group/field[@name='company_id']" position="before">-->
+                        <field name="heard_about"/>
+                        <field name="others_heard" attrs="{'invisible' : [('heard_about','!=','others')]}" />
+                </xpath>
+
+<!--            <xpath expr="/form/group/field[@name='type']" position="after">-->
+<!--                <field name="tick_link_id"/>-->
+<!--                <field name="id_number"/>-->
+<!--                <button name="id_generation" string="Generate Id" type="object" />-->
+<!--            </xpath>-->
+
+        
+        <xpath expr="/form/notebook/page[@string='Lead']/group" position='after'>
+        <field colspan="4" mode="form,tree" name="addition_contact" nolabel="1" select="1" height="200">
+                <form string="Additional Contacts">
+                        <group colspan="2" col="4">
+                                        <field name="name"/>
+                                        <field name="street" colspan="4"/>
+                                        <field name="street2" colspan="4"/>
+                                        <field name="zip"/>
+                                        <field name="city"/>
+                                        <field name="country_id" completion="1"/>
+                                        <field name="state_id"/>
+                        </group>
+                        <group colspan="2" col="3">
+                                                <separator string="Communication" colspan="4" col="3"/>
+                                <field name="phone"/>
+                                <field name="fax"/>
+                                <field name="mobile"/>
+                        </group>
+
+                                </form>
+                                <tree string="Additional Contacts">
+                                    <field name="name"/>
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="zip"/>
+                                    <field name="city"/>
+                                    <field name="state_id"/>
+                                </tree>
+                            
+                        </field>
+        </xpath>
+                        
+    </field>
+        </record>
+            <!--############### SEQ NO ######### -->	
+    <record id="seq_type_crm_lead_form_id" model="ir.sequence.type">
+            <field name="name">CRM_lead_form</field>
+            <field name="code">crm.lead.form.seq</field>
+    </record>    
+    <record id="seq_crm_lead_form_id" model="ir.sequence">
+            <field name="name">CRM_lead_form</field>
+            <field name="code">crm.lead.form.seq</field>
+            <field name="prefix">ID/</field>
+            <field name="padding">5</field>
+    </record>        
+<!--############### SEQ NO ######### -->	    
+        </data>
+</openerp>

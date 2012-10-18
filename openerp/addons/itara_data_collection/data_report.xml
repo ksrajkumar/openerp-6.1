@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <report id="report_data_collection" model="crm.lead" name="data_collect" rml="itara_data_collection/report/data_collection.rml" string="Data Collection Report"/>
+    </data>
+</openerp>

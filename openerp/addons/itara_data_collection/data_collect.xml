@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    
+    <data>
+
+            
+	<record id="dc_lead_form_1" model="ir.ui.view">
+	    <field name="name">dc.lead.form</field>
+            <field name="type">form</field>
+            <field name="model">general.medical.survey</field>
+            <field name="type">form</field>
+<!--            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>-->
+            <field name="inherit_id" ref="itara_medical_survey.general_medical_form_id"/>
+            <field name="arch" type="xml"> 		
+                <page string="Information" position="after">
+		    <page string="Data Collection Form">			      
+			    <field colspan="4"  name="collect_line" nolabel="1" widget="one2many_list">
+		            <tree string="Data Collection Form" >
+		                <field name="name" invisible="1"/>   
+		                <field name="req_id"/> 
+				<field name="desp"/>      
+                                        
+		            </tree> 		                                            
+
+			    </field>  
+<group colspan="2" col="2">
+                            	<separator string="NATURE OF DUST" colspan="4" /> 
+		                <field name="dust1"/>
+		                <field name="dust2"/>                        
+		                <field name="dust3"/>
+		                <field name="dusts1"/>
+		                <field name="dusts2"/>                        
+		                <field name="dusts3"/>                      
+		                <field name="dusts4"/>
+		                <field name="dusts5"/>                        
+		                <field name="dusts6"/>
+			      </group> 
+                       
+			      <group colspan="2" col="2">
+	       		        <separator string="UTILITY" colspan="2" /> 
+		                <field name="utility"/>
+			      </group> 
+                          
+	 		      <group colspan="2" col="2">
+		                <separator string="ELECTRICAL SUPPLY" colspan="2" />                        
+		                <field name="voltage"/>
+		                <!--<field name="volts"/>-->
+		                <field name="frequency"/>                        
+		                <!--<field name="hz"/>-->                    
+		                <field name="phase1"/>
+		                <!--<field name="phase2"/>-->                       
+		                <field name="phase3"/>
+			      </group>              
+                      
+                            		    
+		    </page>
+		    
+		</page>
+            </field>
+	</record>
+
+	<record id="data_collect_form" model="ir.ui.view">
+            <field name="name">data.collect.form</field>
+            <field name="model">data.collect</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Data Collection Form">
+                    <notebook colspan="4">
+                        <page string="DC Form">
+                            	<field name="name" invisible="1"/>   
+		                <field name="req_id"  on_change="onchange_req_id(req_id)" />  
+				<field name="desp"/>
+                                
+                                <button name="button_dummy" states="draft" string="Questionnaire" type="object" icon="gtk-execute"/>                   
+                                <newline/>              
+                               <!-- <field name="appln"/> -->
+				<field colspan="4"  name="data_line" nolabel="1" widget="one2many_list">
+				    <tree string="Data Collection Line" editable="bottom">
+				        <field name="name" invisible="1"/>   
+				        <field name="quest_id"/>  
+					<field name="yesno"/> 
+					<field name="remark"/>                                               
+				    </tree>
+				    <form string="Data Collection Line" >
+				        <field name="name" invisible="1"/>   
+				        <field name="quest_id"/>  
+					<field name="yesno"/> 
+					<field name="remark"/>                                               
+				    </form>				    
+				</field>    
+                        </page>
+                       
+                    </notebook>
+                </form>
+            </field>
+        </record>        
+    
+       
+
+    </data>
+</openerp>

@@ -19,7 +19,7 @@
 <!-- field hidden in opportunity  -->
 		    	<xpath expr='/form/group/button[@string="Schedule/Log Call"]' position='after'>
 		    	<newline/>
-			        <group colspan="5" col="7">
+			        <group colspan="4" col="7">
     			        <field name="birth_date" string="Birth Date" on_change="onchange_birth_date(birth_date)"/>
     			        <field name="age" string="Age" readonly="1"/>
     			        <field name="tick_link_id"/>
@@ -44,7 +44,7 @@
 <!--            </xpath>-->
 
         
-        <xpath expr="/form/notebook/page[@string='Lead']/group" position='after'>
+        <xpath expr="/form/notebook/page[@string='Lead']/group" position='before'>
         <field colspan="4" mode="form,tree" name="addition_contact" nolabel="1" select="1" height="200">
                 <form string="Additional Contacts">
                         <group colspan="2" col="4">

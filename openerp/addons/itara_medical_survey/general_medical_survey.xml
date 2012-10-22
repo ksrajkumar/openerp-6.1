@@ -25,7 +25,23 @@
                             <field name="med_for_depression"/>
                             <field name="med_for_dep_name"/>
                             <field name="med_for_dep_amt"/>
-                            
+                        </page>
+                        <page string="Question pack">
+                            <field name="quest_pack_id"/> <!-- on_change="onchange_question_pack(quest_pack_id)"/> -->
+                            <button name="onchange_question_pack" string="Generate ques" type="object" />
+                          <!--  <field colspan="2" name="med_line" nolabel="1" widget="one2many_list"/> -->
+                            <field colspan="4" mode="tree,form" name="med_line" nolabel="1" widget="one2many_list">
+                            <form string="Questionna Line">
+                                <field name='questions_id'/>
+                                <field name='yesno'/>
+                                <field name='remark'/>
+                            </form>
+                            <tree string="Questi Line">
+       		        		<field name="questions_id"/>
+                        		<field name="yesno"/> 
+                        		<field name="remark"/>
+                        	</tree>
+                            </field>  
                         </page>
             </notebook>
             </form>

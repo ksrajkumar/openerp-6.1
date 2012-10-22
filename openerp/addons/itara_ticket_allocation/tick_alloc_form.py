@@ -38,7 +38,7 @@ class ticket_allocation(osv.osv):
     'tick_num':fields.one2many('ticket.list','add_tick_id','Ticket Numbers')
     }
     _defaults = {
-         'alloc_date': time.strftime('%Y-%m-%d'),
+         'alloc_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
      }
 
 ####3#Seq Id Generation#########
@@ -74,4 +74,7 @@ class ticket_list(osv.osv):
     'sal_per_id':fields.many2one('res.users','Sales Person'),
     'allocation_date':fields.datetime('Allocation Date'),
     }
+#    _defaults={
+#      'allocation_date':time.strftime('%Y-%m-%d %H:%M:S')
+#   }
 ticket_list()

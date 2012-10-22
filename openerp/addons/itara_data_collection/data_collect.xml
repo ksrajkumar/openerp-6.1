@@ -13,18 +13,23 @@
             <field name="inherit_id" ref="itara_medical_survey.general_medical_form_id"/>
             <field name="arch" type="xml"> 		
                 <page string="Information" position="after">
-		    <page string="Data Collection Form">			      
+		    <page string="Data Collection Form">			  
+                   <!--  <group colspan="2" col="2">
+                                        <separator string="Data Collection Form" colspan="2" col="2" />
+                                        <field name="collect_line"/>
+                                     </group>  -->
+                
 			    <field colspan="4"  name="collect_line" nolabel="1" widget="one2many_list">
 		            <tree string="Data Collection Form" >
 		                <field name="name" invisible="1"/>   
 		                <field name="req_id"/> 
-				<field name="desp"/>      
-                                        
+                        <field name="desp"/>      
 		            </tree> 		                                            
-
-			    </field>  
-<group colspan="2" col="2">
-                            	<separator string="NATURE OF DUST" colspan="4" /> 
+			    </field>      
+                
+                
+          <!--      <group colspan="2" col="2">
+                    <separator string="NATURE OF DUST" colspan="4" /> 
 		                <field name="dust1"/>
 		                <field name="dust2"/>                        
 		                <field name="dust3"/>
@@ -43,14 +48,14 @@
                           
 	 		      <group colspan="2" col="2">
 		                <separator string="ELECTRICAL SUPPLY" colspan="2" />                        
-		                <field name="voltage"/>
+		                <field name="voltage"/>    -->
 		                <!--<field name="volts"/>-->
-		                <field name="frequency"/>                        
+		              <!--  <field name="frequency"/>                          -->
 		                <!--<field name="hz"/>-->                    
-		                <field name="phase1"/>
+		        <!--        <field name="phase1"/>   -->
 		                <!--<field name="phase2"/>-->                       
-		                <field name="phase3"/>
-			      </group>              
+		      <!--          <field name="phase3"/>  -->
+			 <!--     </group>              -->
                       
                             		    
 		    </page>
@@ -71,10 +76,15 @@
 		                <field name="req_id"  on_change="onchange_req_id(req_id)" />  
 				<field name="desp"/>
                                 
-                                <button name="button_dummy" states="draft" string="Questionnaire" type="object" icon="gtk-execute"/>                   
-                                <newline/>              
+                                <button name="button_dummy" string="Questionnaire" type="object" icon="gtk-execute"/>                   
+                                <newline/>
+                                
+                                <group colspan="2" col="2">
+                                        <separator string="Data Collection Line" colspan="2" col="2" />
+                                        <field name="data_line"/>
+                                     </group>        
                                <!-- <field name="appln"/> -->
-				<field colspan="4"  name="data_line" nolabel="1" widget="one2many_list">
+			<!--	<field colspan="4"  name="data_line" nolabel="1" widget="one2many_list">
 				    <tree string="Data Collection Line" editable="bottom">
 				        <field name="name" invisible="1"/>   
 				        <field name="quest_id"/>  
@@ -87,7 +97,7 @@
 					<field name="yesno"/> 
 					<field name="remark"/>                                               
 				    </form>				    
-				</field>    
+				</field>       -->
                         </page>
                        
                     </notebook>

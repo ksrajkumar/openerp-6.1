@@ -31,7 +31,7 @@ from datetime import date
 
 class opp_contact_address(osv.osv):
     _name="opp.contact.address"
-    _description="Address fields"
+    _description="Oppur cont add fields"
     _columns={
     'add_cont_id':fields.many2one("crm.lead", 'Addional contact'),
     'name':fields.char("Contact Name",size=68),
@@ -69,8 +69,8 @@ class crm(osv.osv):
 	'addition_contact':fields.one2many("opp.contact.address",'add_cont_id','Additional Contacts'),
 	'heard_about':fields.selection([('friend','Friend'),('internet','Internet'),('others','Others')],'How U heard abt us'),
 	'others_heard':fields.char(" ",size=128),
-	'tick_link_id':fields.many2one('ticket.list','Tickets', domain="['&',('sal_per_id','=',uid), ('allocation_date','<', time.strftime('%Y-%m-%d 23:59:59').encode('utf8')), ('allocation_date','>=', time.strftime('%Y-%m-%d 00:00:00').encode('utf8'))]"),
-	
+#	'tick_link_id':fields.many2one('ticket.list','Tickets', domain="['&',('sal_per_id','=',uid), ('allocation_date','<', time.strftime('%Y-%m-%d 23:59:59').encode('utf8')), ('allocation_date','>=', time.strftime('%Y-%m-%d 00:00:00').encode('utf8'))]"),
+	'tick_link_id':fields.many2one('ticket.list','Tickets', domain="['&',('sal_per_id','=',uid), ('allocation_date','<', time.strftime('%Y-%m-%d 23:59:59')), ('allocation_date','>=', time.strftime('%Y-%m-%d 00:00:00'))]")
      }
     _defaults = {
          'id_number': lambda obj, cr, uid, context: '/',

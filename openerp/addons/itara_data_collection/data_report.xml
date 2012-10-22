@@ -2,6 +2,6 @@
 <openerp>
     <data>
         
-        <report id="report_data_collection" model="crm.lead" name="data_collect" rml="itara_data_collection/report/data_collection.rml" string="Data Collection Report"/>
+        <report id="report_data_collection" model="general.medical.survey" name="data_collect" rml="itara_data_collection/report/data_collection.rml" string="Data Collection Report"/>
     </data>
 </openerp>

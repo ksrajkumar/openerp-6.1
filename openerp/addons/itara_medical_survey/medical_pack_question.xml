@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    
+    <data>
+
+            
+	<menuitem id="menu_question_collect_master" name="Data Collection Master" parent="base.menu_base_partner" sequence="2"/>
+<!-- Requirements - Product Category -->
+	<record model="ir.ui.view" id="data_collect_quest_form">
+		<field name="name">question.collect.req.form</field>
+		<field name="type">form</field>
+		<field name="model">med.question.pack</field>		
+		<field name="arch" type="xml">
+			<form string="Requirements">
+				<field name="name"/>
+				<field name="code"/>	
+                                <separator string="Questionnaire" colspan="2"/>
+                                <field colspan="4" mode="tree,form" name="pack_line" nolabel="1" widget="one2many_list">
+				<form string="Questionnaire Line">
+       		        		<field name="question_id"/>
+                        		<field name="yesno"/> 
+                        		<field name="remark"/>
+                        		
+                        	</form>
+				<tree string="Questionnaire Line">
+       		        		<field name="question_id"/>
+                        		<field name="yesno"/> 
+                        		<field name="remark"/>
+                        	</tree>
+                                </field>  
+                        							
+			</form>					
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="data_collect_quest_tree">
+		<field name="name">question.collect.req.tree</field>
+		<field name="type">tree</field>
+		<field name="model">med.question.pack</field>		
+		<field name="arch" type="xml">
+			<tree string="Requirements">
+				<field name="name" select="1"/>
+				<field name="code"/>	
+			</tree>						
+		</field>
+	</record>  
+       
+	<record id="data_collect_quest_action" model="ir.actions.act_window">
+            <field name="name">Requirements</field>
+            <field name="res_model">med.question.pack</field>
+	    <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+        </record>
+        <menuitem action="data_collect_quest_action" id="menu_data_collect_quest_action" parent="menu_question_collect_master" name="Question Pack"/>
+
+<!-- Questionnaire -->
+	<record model="ir.ui.view" id="data_collect_every_quest_form">
+		<field name="name">data.collect.every.quest.form</field>
+		<field name="type">form</field>
+		<field name="model">med.question</field>		
+		<field name="arch" type="xml">
+			<form string="Questionnaire">
+				<field name="name"/>
+				<field name="code"/>								
+			</form>					
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="data_collect_every_quest_tree">
+		<field name="name">data.collect.every.quest.tree</field>
+		<field name="type">tree</field>
+		<field name="model">med.question</field>		
+		<field name="arch" type="xml">
+			<tree string="Questionnaire">
+				<field name="name" select="1"/>
+				<field name="code"/>	
+			</tree>						
+		</field>
+	</record>
+
+	<record id="data_collect_every_quest_action" model="ir.actions.act_window">
+            <field name="name">Questionnaire</field>
+            <field name="res_model">med.question</field>
+	    <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+        </record>
+        <menuitem action="data_collect_every_quest_action" id="menu_data_collect_every_quest_action" parent="menu_question_collect_master" name="Questionnaire"/>
+    </data>
+</openerp>

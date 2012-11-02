@@ -92,6 +92,15 @@ class crm_make_sale(osv.osv_memory):
                     'section_id': case.section_id and case.section_id.id or False,
                     'categ_id': case.categ_id and case.categ_id.id or False,
                     'shop_id': make.shop_id.id,
+#########################################Itara#########################################################
+                    'link_lead' : case.id,
+                #    'dom_expo':case.dom_expo_opp,
+                    'channel_id': case.channel_id.id,
+                    'type_id': case.type_id.id,
+                  #  'region': case.region.id,
+                   # 'sale_region': case.sale_region.id,
+#########################################Itara#########################################################
+
                     'partner_id': partner.id,
                     'pricelist_id': pricelist,
                     'partner_invoice_id': partner_addr['invoice'],
@@ -100,8 +109,8 @@ class crm_make_sale(osv.osv_memory):
                     'date_order': fields.date.context_today(self,cr,uid,context=context),
                     'fiscal_position': fpos,
                 }
-                if partner.id:
-                    vals['user_id'] = partner.user_id and partner.user_id.id or uid
+                #if partner.id:
+                #    vals['user_id'] = partner.user_id and partner.user_id.id or uid
                 new_id = sale_obj.create(cr, uid, vals, context=context)
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
@@ -109,7 +118,30 @@ class crm_make_sale(osv.osv_memory):
                 message = _("Opportunity  '%s' is converted to Quotation.") % (case.name)
                 self.log(cr, uid, case.id, message)
                 case_obj.message_append(cr, uid, [case], _("Converted to Sales Quotation(%s).") % (sale_order.name), context=context)
+############################### itara #########################################
+                for prod in case.product_line:
+					print prod.product_id.id
+					if prod.lead_id.id == case.id:
+						product = self.pool.get('sale.order.line').create(cr, uid, {
+							'order_id' : new_id,
+							'product_id' : prod.product_id.id,
+							'name' : prod.product_id.name,
+							'notes' : prod.product_id.product_tmpl_id.description_sale,
+							'price_unit' :prod.product_id.product_tmpl_id.list_price,
+#							'sequence' :prod.sequence,
+							'product_uom_qty' : prod.product_uom_qty,
+							'product_uom' : prod.product_uom.id,
+#							'partner_id' : prod.partner_id.id
+                            'item_model' : prod.item_model,
+    
+							})
+             #   for mess in case.message_ids:
+			#	    self.pool.get('sales.notes').create(cr, uid, {
+			#	        'notes' : mess.display_text,
+			#	        'sales_notes_id' : new_id,
+			#	    })
 
+##########################################################################
             if make.close:
                 case_obj.case_close(cr, uid, data)
             if not new_ids:

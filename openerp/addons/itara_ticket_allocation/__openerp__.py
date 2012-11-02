@@ -28,7 +28,7 @@
     'website': 'http://www.openerp.com',
     'depends': [ 'sale','crm'],
     'init_xml': [ ],
-    'update_xml':['tick_alloc_form.xml'],
+    'update_xml':['tick_alloc_form.xml','tick_assign.xml'],
     'demo_xml': [ ],
     'test': [ ],
     'installable': True,

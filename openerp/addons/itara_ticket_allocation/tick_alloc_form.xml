@@ -10,7 +10,10 @@
 	      <form string="Ticket allocation">
 	      <group colspan="4" col="7">
 	               <field name="sales_person_id" required='1'/>  
-	               <field name="alloc_date"/>  
+	               <field name="alloc_date" readonly='1'/>  
+                   <field name="entity_data_id" on_change="onchange_entity_data_id(entity_data_id)"/>
+                   <field name="enty_no"/>
+                   <field name="remarks"/>
 	               </group>
                         <notebook colspan='4'>
                         <page string="Ticket">
@@ -41,9 +44,13 @@
 	               		<field name="sales_person_id"/>  
 	               		<field name="alloc_date"/>  
 	               		<field name="tick_num"/>
+                        <field name="entity_data_id"/>
+                        <field name="enty_no"/>
+                        <field name="remarks"/>
                 </tree>
             </field>	
 	</record>
+
 
 	<record id="action_ticket_allocation_form1" model="ir.actions.act_window">
             <field name="name">Ticket allocation</field>
@@ -55,7 +62,7 @@
 
 <menuitem id="base.menu_crm_ticket_allocation" name="Ticket Allocation" action="action_ticket_allocation_form1"
             parent="base.menu_sales" sequence="3" groups="base.group_sale_manager"/>
-
+            
             <!--############### SEQ NO ######### -->	
     <record id="seq_type_ticket_number_id" model="ir.sequence.type">
             <field name="name">ticket_number</field>
@@ -102,7 +109,47 @@
 <!--        </field>-->
 <!--    </record>-->
 
+        <record id="entity_data_form" model="ir.ui.view">
+            <field name="name">entity.data.form</field>
+            <field name="type">form</field>
+            <field name="model">entity.data</field>
+            <field name="arch" type="xml">
+	      <form string="Entity">
+	      <group colspan="4" col="7">
+	               <field name="name" required='1'/>  
+                   <field name="ent_num" required='1'/>  
+	               <field name="ent_date"/>  
+                   <field name="ent_dept"/>
+            </group>
+	       </form>
+	     </field>
+	 </record>
 
+        <record id="entity_data_tree" model="ir.ui.view">
+            <field name="name">entity.data.tree</field>
+            <field name="type">tree</field>
+            <field name="model">entity.data</field>
+            <field name="arch" type="xml">
+                <tree string ="Entities"> 
+	               		<field name="name"/>  
+	               		<field name="ent_num"/>  
+	               		<field name="ent_date"/>
+                        <field name="ent_dept"/>
+                </tree>
+            </field>	
+	</record>
+
+
+	<record id="action_entity_data_form1" model="ir.actions.act_window">
+            <field name="name">Entity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">entity.data</field>
+            <field name="view_type">form</field>   
+            <field name="view_id" ref="entity_data_tree"/>              
+        </record>
+
+<menuitem id="menu_crm_entity_data" name="Entity" action="action_entity_data_form1"
+            parent="base.menu_sales" sequence="6" groups="base.group_sale_manager"/>
             
 
    </data>

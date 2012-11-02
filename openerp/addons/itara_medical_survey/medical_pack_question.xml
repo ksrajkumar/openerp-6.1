@@ -4,7 +4,7 @@
     <data>
 
             
-	<menuitem id="menu_question_collect_master" name="Data Collection Master" parent="base.menu_base_partner" sequence="2"/>
+	<menuitem id="menu_question_collect_master" name="Questionnaire Master" parent="base.menu_base_partner" sequence="2"/>
 <!-- Requirements - Product Category -->
 	<record model="ir.ui.view" id="data_collect_quest_form">
 		<field name="name">question.collect.req.form</field>

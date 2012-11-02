@@ -58,9 +58,12 @@
             <field name="arch" type="xml">
                 <tree string ="Ticket Assign"> 
                         <field name="name"/>
-	               		<field name="sal_per_id"/>  
+                        <field name="entity_data_id"/>
+                        <field name="enty_no"/>
+	               		<field name="sal_per_id"/> 
     			        <field name="allocation_date"/>
                         <field name="state"/>
+                        <field name="remarks"/>
 
                 </tree>
             </field>	
@@ -76,6 +79,7 @@
 	               		<field name="sal_per_id"/>  
     			        <field name="allocation_date"/>
                         <field name="state"/>
+                        <field name="remarks"/>
 
                 </form>
             </field>	
@@ -103,7 +107,7 @@
             <field name="name">Ticket Assign </field>
             <field name="res_model">ticket.list</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
            <field name="view_id" eval="False" /> <!-- ref="tick_assign_tree"/>  -->
            <field name="search_view_id" ref="view_ticket_assign_leads_filter"/>
             <field name="context">{"search_default_sal_per_id":uid}</field>
@@ -117,6 +121,49 @@
 <!--     TICKET ASSIGN VIEW       -->
 
 <!--############### SEQ NO ######### -->
+
+    <!-- CRM Lead Kanban View  -->
+    <record model="ir.ui.view" id="crm_case_kanban_view_ticket_assign">
+        <field name="name">Ticket Log Kanban</field>
+        <field name="model">ticket.list</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="sal_per_id"/>
+                <templates>
+                
+                <t t-name="ticket_assign_details">
+                        <ul class="oe_kanban_tooltip">
+                            <li t-if="record.remarks.raw_value"><b>Remark:</b> <field name="remarks"/></li>
+                            
+                            <li><b>ticket No.:</b> <field name="name"/></li>
+                            <li t-if="record.allocation_date.raw_value"><b>Allocation Date:</b> <field name="allocation_date"/></li>
+                        </ul>
+                    </t>
+                
+                <t t_name="kanban-box">  
+                    <div class="oe_kanban_box">
+                        <div class="oe_kanban_box_header">
+                                <li><b>Hello</b></li>
+                        </div>
+                    <div class="oe_kanban_box_content oe_kanban_box_show_onclick_trigger">
+                            <li><b>Hello how are you?</b></li>
+                    </div>
+                    <div class="oe_kanban_left">
+                        <a string="Edit" icon='gkt-edit' type="edit"/>
+                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                        </div>
+                        <br class="oe_kanban_clear"/>
+                    </div>
+           </t>
+
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+
+
 
 
     <!-- CRM Lead Kanban View  -->

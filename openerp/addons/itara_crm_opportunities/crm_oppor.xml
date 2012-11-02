@@ -21,12 +21,14 @@
 		    	<newline/>
 			        <group colspan="4" col="7">
     			        <field name="birth_date" string="Birth Date" on_change="onchange_birth_date(birth_date)"/>
-    			        <field name="age" string="Age" readonly="1"/>
+    			        <field name="age" string="Age"/>
     			        <field name="tick_link_id"/>
                         <field name="id_number"/>
                         <group colspan='1' col='5'>
-                        <button name="id_generation" string="Generate Id" type="object" />
+                        <button name="id_generation" string="Generate ID" type="object" />
                         </group>
+                       <button name="action_makesurvey" type="object" string="Survey" icon="gtk-redo" />
+                       <button name="action_makeinvoice" type="object" string="Pay" icon="gtk-redo" />
         			</group>
         			<newline/>
                </xpath>
@@ -75,9 +77,70 @@
                             
                         </field>
         </xpath>
-                        
-    </field>
+                     
+            <page string = "Opportunity" position="after">
+			<page string = "Product">
+			    <field colspan="4" mode="tree,form" name="product_line" nolabel="1" widget="one2many_list">
+                                <form string="CRM-Opportunity Lines">
+                                	<field  name="product_id" on_change="onchange_product_id(product_id)"/>
+            				<newline/>
+                                	<field name="product_uom_qty" />
+                                	<field name="product_uom" />
+                                	<field name="item_model"/>
+                                </form>
+                                <tree string="CRM-Opportunity Lines">
+            				<field name="product_id"/>
+            				<newline/>
+                                	<field name="product_uom_qty"/>
+                                	<field name="product_uom"/>
+                                	<field name="item_model"/>
+                                	
+                                </tree>
+                            </field>
+     <!--########################itara###########################-->
+		 
+                    
+                 
+<!--########################itara###########################-->
+                        </page>
+                        </page>
+               </field>
         </record>
+
+
+<!--##########################partner form ######################## -->
+
+ 	<record model="ir.ui.view" id="res_partner_product">
+                <field name="name">res.partner.product</field>
+                <field name="model">res.partner</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="base.view_partner_form"/>
+                <field name="arch" type="xml">
+                	<page string = "Notes" position="after">
+			<page string = "Product">
+			    <field colspan="4" mode="tree,form" name="product_line" nolabel="1" widget="one2many_list">
+                                <form string="Partner-Product Lines">
+                                	<field  name="product_id" />
+            				<newline/>
+                                	<field name="product_uom_qty" />
+                                	<field name="product_uom" />
+                                	
+                                </form>
+                                <tree string="Partner-Product Lines">
+            				<field name="product_id"/>
+            				<newline/>
+                                	<field name="product_uom_qty"/>
+                                	<field name="product_uom"/>
+                                	
+                                	
+                                </tree>
+                            </field>
+
+                        </page>
+                        </page>
+               </field>
+        </record>
+        
             <!--############### SEQ NO ######### -->	
     <record id="seq_type_crm_lead_form_id" model="ir.sequence.type">
             <field name="name">CRM_lead_form</field>
@@ -90,5 +153,69 @@
             <field name="padding">5</field>
     </record>        
 <!--############### SEQ NO ######### -->	    
+
+     <!--   <act_window
+            context="{'search_default_oppor_link_id': [active_id], 'default_oppor_link_id': active_id}"
+            id="action_general_medical_survey_tree_view_id"
+            name="Survey"
+            src_model="crm.lead"
+            res_model="general.medical.survey"
+              key2="client_action_multi"
+                multi="True"
+                view_mode="tree,form"
+                view_type="form"
+                target="new"/>     
+                -->
+                
+  <!--      <act_window
+        id="action_general_medical_survey_tree_view_id"
+        name="Survey"
+        res_model="general.medical.survey"
+        src_model="crm.lead"
+        view_mode="form,tree"
+        context="{'search_default_oppor_link_id': [active_id], 'default_oppor_link_id': active_id}"
+    />   -->
+        
+        <!--   ###############################################################################3 
+       <record model="ir.actions.act_window" id="action_general_medical_survey_tree_view_id">
+        <field name="name">Surveys</field>
+        <field name="context">{'default_oppor_link_id': active_id}</field>
+    </record>
+   
+       <record model="ir.actions.act_window.view" id="action_crm_survey_form_id_act">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="general_medical_form_id"/>
+        <field name="act_window_id" ref="action_general_medical_survey_tree_view_id"/>
+    </record>
+    
+    <record model="ir.actions.act_window.view" id="action_crm_survey_tree_id_act">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="general_medical_tree"/>
+        <field name="act_window_id" ref="action_general_medical_survey_tree_view_id"/>
+    </record>
+    
+    <record model="ir.actions.act_window" id="crm_case_survey_form">
+        <field name="name">Survey</field>
+        <field name="res_model">general.medical.survey</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="action_crm_survey_form_id_act"/>
+        <field name="context">{"form_default_user_id":uid}</field>
+        <field name="search_view_id" ref="view_crm_case_meetings_filter"/> 
+        <field name="help">The Survey is usefull to take questions
+        </field>
+    </record>
+    
+    #############################################################-->
+                
+     <!--   <act_window
+            context="{'search_default_oppor_link_id': [active_id],}"
+            id="action_general_medical_survey_tree_view_id"
+            name="Survey"
+            res_model="general.medical.survey"
+            src_model="crm.lead"/>    -->
+
+
         </data>
 </openerp>

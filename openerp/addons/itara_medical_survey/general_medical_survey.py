@@ -32,7 +32,7 @@ class general_medical_survey(osv.osv):
     _name="general.medical.survey"
     _description="Medical Survey for Customer"
     _columns={
-     'name':fields.many2one('res.users', 'Name'),
+     'name':fields.many2one('res.partner', 'Name'),
      'quest_pack_id':fields.many2one('med.question.pack','Questions'),
      #'every_quest_id':fields.many2many('med.question','med_quest_rel','quest_code','q_id','Questions'),
      'med_line':fields.one2many('general.medical.survey.line', 'med_line_id', 'Every Question'),
@@ -48,6 +48,7 @@ class general_medical_survey(osv.osv):
      'med_for_depression':fields.selection([('yes','Yes'),('no','No'),],'Medicine for Depression?'),
      'med_for_dep_name':fields.char('Medicine for Depression name',size=128),
      'med_for_dep_amt':fields.char('Medicine for Depression amount', size=128),
+     'oppor_link_id':fields.char('Opportunity link id',size=64),
     
     }
     

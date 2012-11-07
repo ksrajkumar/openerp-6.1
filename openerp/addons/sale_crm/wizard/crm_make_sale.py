@@ -93,10 +93,10 @@ class crm_make_sale(osv.osv_memory):
                     'categ_id': case.categ_id and case.categ_id.id or False,
                     'shop_id': make.shop_id.id,
 #########################################Itara#########################################################
-                    'link_lead' : case.id,
+                  #  'link_lead' : case.id,
                 #    'dom_expo':case.dom_expo_opp,
-                    'channel_id': case.channel_id.id,
-                    'type_id': case.type_id.id,
+                 #   'channel_id': case.channel_id.id,
+                 #   'type_id': case.type_id.id,
                   #  'region': case.region.id,
                    # 'sale_region': case.sale_region.id,
 #########################################Itara#########################################################
@@ -132,7 +132,7 @@ class crm_make_sale(osv.osv_memory):
 							'product_uom_qty' : prod.product_uom_qty,
 							'product_uom' : prod.product_uom.id,
 #							'partner_id' : prod.partner_id.id
-                            'item_model' : prod.item_model,
+                           # 'item_model' : prod.item_model or ' ',
     
 							})
              #   for mess in case.message_ids:
@@ -166,7 +166,31 @@ class crm_make_sale(osv.osv_memory):
                     'type': 'ir.actions.act_window',
                     'res_id': new_ids
                 }
-            return value
+                return value
+            case_obj.case_close(cr, uid, data)
+        sal_b=self.pool.get('sale.order')
+        print sal_b,"LLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
+        sal_b.action_wait(cr, uid, new_ids, context=None) 
+        sal_b.action_ship_create(cr, uid, new_ids, context=None)
+        #sal_b.test_state(cr, uid, new_ids, context=None)   
+        #sal_b.procurement_lines_get(cr, uid, new_ids, context)
+        sal_b.manual_invoice(cr, uid, new_ids, context=None)
+        c=sal_b.action_invoice_create( cr, uid, new_ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None)
+        
+        return {
+            'name': _('Customer Invoices'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': c or False,
+        }
+
+        
 
     def _get_shop_id(self, cr, uid, ids, context=None):
         cmpny_id = self.pool.get('res.users')._get_company(cr, uid, context=context)

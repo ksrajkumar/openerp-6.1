@@ -140,7 +140,23 @@
                             <li t-if="record.allocation_date.raw_value"><b>Allocation Date:</b> <field name="allocation_date"/></li>
                         </ul>
                     </t>
-                
+                <t t_name="kanban-box">
+                <div class="oe_resource_vignette">
+                        <div class="oe_resource_image">
+                            <a type="edit"><img t-att-src="kanban_image('object.name', 'photo', record.id.value)" class="oe_resource_picture"/></a>
+                        </div>
+                        <div class="oe_resource_details">
+                            <ul>
+<!--Here u have to write the ur objects field name which u wnt to display in kanban view -->
+                               <li><field name="name"/></li>
+                               <li><field name="allocation_date"/></li>
+                               <li><field name="remarks"/></li>
+                               <li><field name="sal_per_id"/> </li>                                   
+                             </ul>
+                        </div>
+                    </div>           
+                    </t>
+<!--
                 <t t_name="kanban-box">  
                     <div class="oe_kanban_box">
                         <div class="oe_kanban_box_header">
@@ -156,6 +172,7 @@
                         <br class="oe_kanban_clear"/>
                     </div>
            </t>
+-->
 
                 </templates>
             </kanban>

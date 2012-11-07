@@ -51,6 +51,7 @@ class sale_order(osv.osv):
     _description = "Sales Order"
 
     def copy(self, cr, uid, id, default=None, context=None):
+        print "copy function"
         if not default:
             default = {}
         default.update({
@@ -64,12 +65,14 @@ class sale_order(osv.osv):
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
     def _amount_line_tax(self, cr, uid, line, context=None):
+        print "_amount_line_tax"
         val = 0.0
         for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id)['taxes']:
             val += c.get('amount', 0.0)
         return val
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+        print "_amount_all"
         cur_obj = self.pool.get('res.currency')
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
@@ -90,6 +93,7 @@ class sale_order(osv.osv):
 
     # This is False
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
+        print "_picked_rate"
         if not ids:
             return {}
         res = {}
@@ -128,6 +132,7 @@ class sale_order(osv.osv):
         return res
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
+        print "_invoiced_rate"
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
             if sale.invoiced:
@@ -144,6 +149,7 @@ class sale_order(osv.osv):
         return res
 
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
+        print "_invoiced"
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
             res[sale.id] = True
@@ -159,6 +165,7 @@ class sale_order(osv.osv):
         return res
 
     def _invoiced_search(self, cursor, user, obj, name, args, context=None):
+        print "_invoiced_search"
         if not len(args):
             return []
         clause = ''
@@ -189,6 +196,7 @@ class sale_order(osv.osv):
         return [('id', 'in', [x[0] for x in res])]
 
     def _get_order(self, cr, uid, ids, context=None):
+        print "_get_order"
         result = {}
         for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
@@ -289,6 +297,7 @@ class sale_order(osv.osv):
 
     # Form filling
     def unlink(self, cr, uid, ids, context=None):
+        print "unlink"
         sale_orders = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for s in sale_orders:
@@ -300,6 +309,7 @@ class sale_order(osv.osv):
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_shop_id(self, cr, uid, ids, shop_id):
+        print "onchange_shop_id"
         v = {}
         if shop_id:
             shop = self.pool.get('sale.shop').browse(cr, uid, shop_id)
@@ -310,6 +320,7 @@ class sale_order(osv.osv):
         return {'value': v}
 
     def action_cancel_draft(self, cr, uid, ids, *args):
+        print "action_cancel_draft"
         if not len(ids):
             return False
         cr.execute('select id from sale_order_line where order_id IN %s and state=%s', (tuple(ids), 'cancel'))
@@ -327,6 +338,7 @@ class sale_order(osv.osv):
         return True
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context={}):
+        print "onchange_pricelist_id"
         if (not pricelist_id) or (not order_lines):
             return {}
         warning = {
@@ -336,6 +348,7 @@ class sale_order(osv.osv):
         return {'warning': warning}
 
     def onchange_partner_order_id(self, cr, uid, ids, order_id, invoice_id=False, shipping_id=False, context={}):
+        print "onchange_partner_order_id"
         if not order_id:
             return {}
         val = {}
@@ -346,6 +359,7 @@ class sale_order(osv.osv):
         return {'value': val}
 
     def onchange_partner_id(self, cr, uid, ids, part):
+        print "onchange_partner_id"
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'partner_order_id': False, 'payment_term': False, 'fiscal_position': False}}
 
@@ -368,6 +382,7 @@ class sale_order(osv.osv):
         return {'value': val}
 
     def shipping_policy_change(self, cr, uid, ids, policy, context=None):
+        print "shipping_policay_change"
         if not policy:
             return {}
         inv_qty = 'order'
@@ -378,6 +393,7 @@ class sale_order(osv.osv):
         return {'value': {'invoice_quantity': inv_qty}}
 
     def write(self, cr, uid, ids, vals, context=None):
+        print "write"
         if vals.get('order_policy', False):
             if vals['order_policy'] == 'prepaid':
                 vals.update({'invoice_quantity': 'order'})
@@ -386,6 +402,7 @@ class sale_order(osv.osv):
         return super(sale_order, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
+        print "create"
         if vals.get('order_policy', False):
             if vals['order_policy'] == 'prepaid':
                 vals.update({'invoice_quantity': 'order'})
@@ -394,14 +411,17 @@ class sale_order(osv.osv):
         return super(sale_order, self).create(cr, uid, vals, context=context)
 
     def button_dummy(self, cr, uid, ids, context=None):
+        print "button_dummy"
         return True
 
     # FIXME: deprecated method, overriders should be using _prepare_invoice() instead.
     #        can be removed after 6.1.
     def _inv_get(self, cr, uid, order, context=None):
+        print '_inv_get'
         return {}
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        print "_prepare_invoice"
         """Prepare the dict of values to create the new invoice for a
            sale order. This method may be overridden to implement custom
            invoice generation (making sure to call super() to establish
@@ -447,6 +467,7 @@ class sale_order(osv.osv):
         return invoice_vals
 
     def _make_invoice(self, cr, uid, order, lines, context=None):
+        print "_makeinvoice"
         inv_obj = self.pool.get('account.invoice')
         obj_invoice_line = self.pool.get('account.invoice.line')
         if context is None:
@@ -471,6 +492,7 @@ class sale_order(osv.osv):
         return inv_id
 
     def manual_invoice(self, cr, uid, ids, context=None):
+        print "manual-invoice"
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
         inv_ids = set()
@@ -502,6 +524,7 @@ class sale_order(osv.osv):
         }
 
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
+        print "action_invoice_create"
         res = False
         invoices = {}
         invoice_ids = []
@@ -559,6 +582,7 @@ class sale_order(osv.osv):
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
+        print 'action_invoice_cancel'
         if context is None:
             context = {}
         for sale in self.browse(cr, uid, ids, context=context):
@@ -579,6 +603,7 @@ class sale_order(osv.osv):
         return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
+        print "action_invoice_end"
         for order in self.browse(cr, uid, ids, context=context):
             #
             # Update the sale order lines state (and invoiced flag).
@@ -610,6 +635,7 @@ class sale_order(osv.osv):
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
+        print "action_cancel"
         wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
@@ -646,7 +672,9 @@ class sale_order(osv.osv):
         return True
 
     def action_wait(self, cr, uid, ids, context=None):
+        print "action_wait",
         for o in self.browse(cr, uid, ids):
+            print o.id, "PPPPPPPPPPPPPPPPPPPPPPPPPPPP",o,"ll"
             if not o.order_line:
                 raise osv.except_osv(_('Error !'),_('You cannot confirm a sale order which has no line.'))
             if (o.order_policy == 'manual'):
@@ -659,6 +687,7 @@ class sale_order(osv.osv):
         return True
 
     def procurement_lines_get(self, cr, uid, ids, *args):
+        print "procurement_lines_get"
         res = []
         for order in self.browse(cr, uid, ids, context={}):
             for line in order.order_line:
@@ -671,6 +700,7 @@ class sale_order(osv.osv):
     # if mode == 'canceled':
     #   returns True if there is at least one canceled line, False otherwise
     def test_state(self, cr, uid, ids, mode, *args):
+        print "test_state",mode
         assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
         finished = True
         canceled = False
@@ -705,6 +735,7 @@ class sale_order(osv.osv):
             return canceled
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
+        print "_prepare_order_line_procurement"
         return {
             'name': line.name,
             'origin': order.name,
@@ -724,6 +755,7 @@ class sale_order(osv.osv):
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
+        print "_prepare_order_line_move"
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
@@ -751,6 +783,7 @@ class sale_order(osv.osv):
         }
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
+        print "_prepare_order_picking"
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         return {
             'name': pick_name,
@@ -767,6 +800,7 @@ class sale_order(osv.osv):
         }
 
     def ship_recreate(self, cr, uid, order, line, move_id, proc_id):
+        print "ship_recreate"
         # FIXME: deals with potentially cancelled shipments, seems broken (specially if shipment has production lot)
         """
         Define ship_recreate for process after shipping exception
@@ -789,11 +823,14 @@ class sale_order(osv.osv):
         return True
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
+        print "_get_date_planned"
+        
         date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)    
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return date_planned
 
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
+        print "_create_pickings_and_procurements"
         """Create the required procurements to supply sale order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
         sale order's requested location.
@@ -858,11 +895,13 @@ class sale_order(osv.osv):
         return True
 
     def action_ship_create(self, cr, uid, ids, context=None):
+        print "action-shiip_create"
         for order in self.browse(cr, uid, ids, context=context):
             self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, context=context)
         return True
 
     def action_ship_end(self, cr, uid, ids, context=None):
+        print "action_ship_end"
         for order in self.browse(cr, uid, ids, context=context):
             val = {'shipped': True}
             if order.state == 'shipping_except':
@@ -882,6 +921,7 @@ class sale_order(osv.osv):
         return True
 
     def _log_event(self, cr, uid, ids, factor=0.7, name='Open Order'):
+        print "_log_event"
         invs = self.read(cr, uid, ids, ['date_order', 'partner_id', 'amount_untaxed'])
         for inv in invs:
             part = inv['partner_id'] and inv['partner_id'][0]
@@ -905,6 +945,7 @@ class sale_order(osv.osv):
             self.pool.get('res.partner.event').create(cr, uid, event)
 
     def has_stockable_products(self, cr, uid, ids, *args):
+        print "has_stockable_products"
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):

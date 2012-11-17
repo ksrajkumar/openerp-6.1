@@ -26,7 +26,7 @@
     'category': 'Generic Modules/CRM & Sale',
     'author': 'Rajkumar',
     'website': 'http://www.openerp.com',
-    'depends': [ 'sale','crm'],
+    'depends': ['base','board', 'sale','crm', 'web', 'web_kanban'],
     'init_xml': [ ],
     'update_xml':['tick_alloc_form.xml','tick_assign.xml'],
     'demo_xml': [ ],

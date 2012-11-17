@@ -111,10 +111,14 @@
                 <form string="Users">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
+                        <field name="code" select="1"/>
                         <field name="login" select="1"/>
                         <field name="id" invisible="1"/>
                         <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
                         <field name="active"/>
+<!--
+                        <button name="code_generation" string="Generate Code" type="object" icon="gtk-jump-to" />
+-->
                     </group>
                     <notebook colspan="4">
                         <page string="User">
@@ -173,6 +177,7 @@
             <field name="arch" type="xml">
                 <tree string="Users">
                     <field name="name"/>
+                    <field name="code"/>
                     <field name="login"/>
                     <field name="context_lang"/>
                     <field name="date"/>
@@ -296,6 +301,20 @@
         <record id="category_administration_config" model="ir.actions.todo.category">
             <field name="name">Administration</field>
             <field name="sequence">1</field>
+        </record>
+        
+        <record id="seq_type_user_code_no1" model="ir.sequence.type">
+            <field name="name">User Code No</field>
+            <field name="code">res.users.code</field>
+        </record>
+
+        <record id="seq_user_code_no2" model="ir.sequence">
+            <field name="name">User Code No</field>
+            <field name="code">res.users.code</field>
+<!--
+            <field name="prefix"></field>
+-->
+            <field name="padding">3</field>
         </record>
     </data>
 </openerp>

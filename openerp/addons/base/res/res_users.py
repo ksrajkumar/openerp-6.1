@@ -203,7 +203,19 @@ class users(osv.osv):
             self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
         return True
 
-
+    #def code_generation(self,cr,uid,ids,*args):
+        #print 'haiii'
+        #for o in self.browse(cr, uid, ids, context={}):
+            #if o.code == '/':
+                #print 'hellllo'
+                #seq_no = self.pool.get('ir.sequence').get(cr, uid, 'res.users.code')
+                #self.write(cr, uid, o.id, {'code': seq_no,})
+            #else:
+                #raise osv.except_osv(_('ID No Alredy Generated !'),
+                        #_('ID No Alredy Generated!'))
+        #return True
+        
+        
     def _get_interface_type(self, cr, uid, ids, name, args, context=None):
         """Implementation of 'view' function field getter, returns the type of interface of the users.
         @param field_name: Name of the field
@@ -232,6 +244,7 @@ class users(osv.osv):
 
     _columns = {
         'id': fields.integer('ID'),
+        'code': fields.char('Code',size=256),
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
                                  " and most listings"),
@@ -357,6 +370,7 @@ class users(osv.osv):
 
     _defaults = {
         'password' : '',
+        'code': lambda obj, cr, uid, context:'/',
         'context_lang': 'en_US',
         'active' : True,
         'menu_id': _get_menu,
@@ -368,7 +382,18 @@ class users(osv.osv):
 
     # User can write to a few of her own fields (but not her groups for example)
     SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name']
-
+    
+    
+    def create(self, cr, uid, vals, context=None):
+        #for i in self.browse(cr,uid,ids,context=None):
+        print vals
+        if ('code' not in vals) or (vals.get('code')=='/'):
+            vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'res.users.code')
+            #raise osv.except_osv(_('Error'),
+                       #_('Code Not Generated'))
+        return super(users,self).create(cr, uid, vals, context)
+        
+        
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
@@ -381,7 +406,6 @@ class users(osv.osv):
                     if not (values['company_id'] in self.read(cr, 1, uid, ['company_ids'], context=context)['company_ids']):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
-
         res = super(users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users

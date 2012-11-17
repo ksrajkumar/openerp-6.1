@@ -85,11 +85,11 @@ class ticket_allocation(osv.osv):
             seq_no = self.pool.get('ir.sequence').get(cr, uid, 'ticket.number.seq')
             print o, "===", o.id, o.sales_person_id, o.alloc_date, o.entity_data_id.id, o.entity_data_id.ent_num
             jx=self.pool.get('ticket.list').create(cr, uid, 
-                        {'name': o.sales_person_id.name[0:4]+str(time.strftime("%d%m%Y"))+seq_no, 
+                        {'name': o.sales_person_id.code+str(time.strftime("%d%m%Y"))+seq_no, 
                         'add_tick_id':o.id, 
                         'sal_per_id':o.sales_person_id.id, 
                         'allocation_date':o.alloc_date,
-                        'remarks':o.remarks or ' ',
+                        'remarks':o.remarks,
                         'entity_data_id':o.entity_data_id.id,
                         'enty_no':o.entity_data_id.ent_num or 'o',
                         })
@@ -114,6 +114,7 @@ ticket_allocation()
 class ticket_list(osv.osv):
     _name="ticket.list"
     _description="Ticket list"
+    _order = "priority"
     _columns = {
     'name':fields.char('Ticket number', size=256),
     'add_tick_id':fields.many2one('ticket.allocation', 'Tick',ondelete='cascade'),
@@ -123,9 +124,48 @@ class ticket_list(osv.osv):
     'entity_data_id':fields.many2one('entity.data','Entity'),
     'enty_no':fields.char('Entity No',size=256),
     'state':fields.selection([('new','New'),('assigned','Assigned')],'state'),
+################################################################################################################    
+    'color': fields.integer('Color Index'),
+    'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
+                                         readonly=True, required=False),
+        'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
+											
     #  in complete
     }
+    
     _defaults={
-      'state': 'new',
-   }
+          'state': 'new',
+          'kanban_state': 'normal',
+          'priority': '2',
+          'color': 5}
+          
+
+
+    def set_priority(self, cr, uid, ids, priority):
+        """Set task priority
+        """
+        return self.write(cr, uid, ids, {'priority' : priority})
+
+    def set_high_priority(self, cr, uid, ids, *args):
+        """Set task priority to high
+        """
+        print ids,"))))))))))))))))))))))))))))))))"
+        return self.set_priority(cr, uid, ids, '1')
+
+    def set_normal_priority(self, cr, uid, ids, *args):
+        """Set task priority to normal
+        """
+        return self.set_priority(cr, uid, ids, '2')
+        
+    def set_kanban_state_blocked1(self, cr, uid, ids, context=None): 
+        self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+
+    def set_kanban_state_normal1(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+
+    def set_kanban_state_done1(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
+        
+################################################################################################################        
+
 ticket_list()

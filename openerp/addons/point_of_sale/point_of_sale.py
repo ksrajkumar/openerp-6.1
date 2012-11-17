@@ -52,6 +52,7 @@ class pos_order(osv.osv):
     _order = "id desc"
     
     def create_from_ui(self, cr, uid, orders, context=None):
+        print "file: point_of_sale fun: create_from_ui"
         #_logger.info("orders: %r", orders)
         list = []
         for order in orders:
@@ -74,18 +75,21 @@ class pos_order(osv.osv):
         return list
 
     def unlink(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: unlink"
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ('draft','cancel'):
                 raise osv.except_osv(_('Unable to Delete !'), _('In order to delete a sale, it must be new or cancelled.'))
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
+        print "file: point_of_sale fun: onchange_partner_id"
         if not part:
             return {'value': {}}
         pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist.id
         return {'value': {'pricelist_id': pricelist}}
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):
+        print "file: point_of_sale fun: _amount_all"
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         res = {}
@@ -108,14 +112,17 @@ class pos_order(osv.osv):
         return res
 
     def _default_sale_journal(self, cr, uid, context=None):
+        print "file: point_of_sale fun: _default_sale_journal"
         res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
         return res and res[0] or False
 
     def _default_shop(self, cr, uid, context=None):
+        print "file: point_of_sale fun: _default_shop"
         res = self.pool.get('sale.shop').search(cr, uid, [])
         return res and res[0] or False
 
     def copy(self, cr, uid, id, default=None, context=None):
+        print "file: point_of_sale fun: copy"
         if not default:
             default = {}
         d = {
@@ -163,6 +170,7 @@ class pos_order(osv.osv):
     }
 
     def _default_pricelist(self, cr, uid, context=None):
+        print "file: point_of_sale fun: _default_pricelist"
         res = self.pool.get('sale.shop').search(cr, uid, [], context=context)
         if res:
             shop = self.pool.get('sale.shop').browse(cr, uid, res[0], context=context)
@@ -182,6 +190,7 @@ class pos_order(osv.osv):
     }
 
     def test_paid(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: test_paid"
         """A Point of Sale is paid when the sum
         @return: True
         """
@@ -194,6 +203,7 @@ class pos_order(osv.osv):
         return True
 
     def create_picking(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: create_picking"
         """Create a picking for each order and validate it."""
         picking_obj = self.pool.get('stock.picking')
         partner_obj = self.pool.get('res.partner')
@@ -245,6 +255,7 @@ class pos_order(osv.osv):
         return True
 
     def set_to_draft(self, cr, uid, ids, *args):
+        print "file: point_of_sale fun: set_to_draft"
         if not len(ids):
             return False
         for order in self.browse(cr, uid, ids, context=context):
@@ -257,6 +268,7 @@ class pos_order(osv.osv):
         return True
 
     def cancel_order(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: cancel_order"
         """ Changes order state to cancel
         @return: True
         """
@@ -269,6 +281,7 @@ class pos_order(osv.osv):
         return True
 
     def add_payment(self, cr, uid, order_id, data, context=None):
+        print "file: point_of_sale fun: add_payment"
         """Create a new payment for the order"""
         statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
@@ -322,6 +335,7 @@ class pos_order(osv.osv):
         return statement_id
 
     def refund(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: refund"
         """Create a copy of order  for refund order"""
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
@@ -354,9 +368,11 @@ class pos_order(osv.osv):
         return abs
 
     def action_invoice_state(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: action_invoice_state"
         return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
 
     def action_invoice(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: action_invoice"
         wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
@@ -432,6 +448,7 @@ class pos_order(osv.osv):
         }
 
     def create_account_move(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: create_account_move"
         """Create a account move line of order grouped by products or not."""
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
@@ -591,19 +608,23 @@ class pos_order(osv.osv):
         return True
 
     def action_payment(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: action_payment"
         return self.write(cr, uid, ids, {'state': 'payment'}, context=context)
 
     def action_paid(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: action_paid"
         context = context or {}
         self.create_picking(cr, uid, ids, context=None)
         self.write(cr, uid, ids, {'state': 'paid'}, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: action_cancel"
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
     def action_done(self, cr, uid, ids, context=None):
+        print "file: point_of_sale fun: action_done"
         self.create_account_move(cr, uid, ids, context=context)
         return True
 
@@ -633,6 +654,7 @@ class pos_order_line(osv.osv):
     _rec_name = "product_id"
 
     def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
+        print "file: point_of_sale class: pos_order_line fun: _amount_line_all"
         res = dict([(i, {}) for i in ids])
         account_tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -647,6 +669,7 @@ class pos_order_line(osv.osv):
         return res
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
+       print "file: point_of_sale class: pos_order_line fun: onchange_product_id"
        context = context or {}
        if not product_id:
             return {}
@@ -663,6 +686,7 @@ class pos_order_line(osv.osv):
        return result
 
     def onchange_qty(self, cr, uid, ids, product, discount, qty, price_unit, context=None):
+        print "file: point_of_sale class: pos_order_line fun: onchange_qty"
         result = {}
         if not product:
             return result
@@ -701,6 +725,7 @@ class pos_order_line(osv.osv):
     }
 
     def copy_data(self, cr, uid, id, default=None, context=None):
+        print "file: point_of_sale class: pos_order_line fun: copy_data"
         if not default:
             default = {}
         default.update({
@@ -715,6 +740,7 @@ class pos_category(osv.osv):
     _description = "PoS Category"
     _order = "sequence, name"
     def _check_recursion(self, cr, uid, ids, context=None):
+        print "file: point_of_sale class: pos_category fun: _check_recursion"
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from pos_category where id IN %s',(tuple(ids),))
@@ -729,6 +755,7 @@ class pos_category(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
+        print "file: point_of_sale class: pos_category fun: name_get"
         if not len(ids):
             return []
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
@@ -741,6 +768,7 @@ class pos_category(osv.osv):
         return res
 
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        print "file: point_of_sale class: pos_category fun: _name_get_fnc"
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
@@ -758,6 +786,7 @@ import io, StringIO
 class product_product(osv.osv):
     _inherit = 'product.product'
     def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
+        print "file: point_of_sale class: product_product fun: _get_small_image"
         result = {}
         for obj in self.browse(cr, uid, ids, context=context):
             if not obj.product_image:

@@ -123,100 +123,99 @@
 <!--############### SEQ NO ######### -->
 
     <!-- CRM Lead Kanban View  -->
-    <record model="ir.ui.view" id="crm_case_kanban_view_ticket_assign">
-        <field name="name">Ticket Log Kanban</field>
+    <record model="ir.ui.view" id="view_ticket_assign_kanban">
+        <field name="name">ticket.log.kanban</field>
         <field name="model">ticket.list</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state">
+            <kanban default_group_by="sal_per_id">
                 <field name="sal_per_id"/>
+                <field name="name"/>
+                <field name="state" />
+    			<field name="allocation_date"/>
+                <field name="remarks"/>
                 <templates>
                 
-                <t t-name="ticket_assign_details">
+
+               <t t-name="ticket_assign_details">
                         <ul class="oe_kanban_tooltip">
-                            <li t-if="record.remarks.raw_value"><b>Remark:</b> <field name="remarks"/></li>
-                            
-                            <li><b>ticket No.:</b> <field name="name"/></li>
-                            <li t-if="record.allocation_date.raw_value"><b>Allocation Date:</b> <field name="allocation_date"/></li>
+                            <li><b>Ticket No.:</b> <field name="name"/></li>
+                            <li t-if="remark"><b>Remark:</b> <field name="remarks"/></li>
+                            <li t-if="allocation_date"><b>Allocation Date:</b> <field name="allocation_date"/></li>
+
                         </ul>
-                    </t>
-                <t t_name="kanban-box">
-                <div class="oe_resource_vignette">
-                        <div class="oe_resource_image">
-                            <a type="edit"><img t-att-src="kanban_image('object.name', 'photo', record.id.value)" class="oe_resource_picture"/></a>
-                        </div>
-                        <div class="oe_resource_details">
-                            <ul>
-<!--Here u have to write the ur objects field name which u wnt to display in kanban view -->
-                               <li><field name="name"/></li>
-                               <li><field name="allocation_date"/></li>
-                               <li><field name="remarks"/></li>
-                               <li><field name="sal_per_id"/> </li>                                   
-                             </ul>
-                        </div>
-                    </div>           
-                    </t>
-<!--
-                <t t_name="kanban-box">  
-                    <div class="oe_kanban_box">
-                        <div class="oe_kanban_box_header">
-                                <li><b>Hello</b></li>
-                        </div>
-                    <div class="oe_kanban_box_content oe_kanban_box_show_onclick_trigger">
-                            <li><b>Hello how are you?</b></li>
-                    </div>
-                    <div class="oe_kanban_left">
-                        <a string="Edit" icon='gkt-edit' type="edit"/>
-                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                        </div>
-                        <br class="oe_kanban_clear"/>
-                    </div>
-           </t>
--->
-
-                </templates>
-            </kanban>
-        </field>
-    </record>
+					</t>
     
+                
+			<!--		<div class="oe_kanban_box oe_kanban_color_border">
+                       <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title">
+                                        <field name="name"/>
 
+                                        <field name="state" />
+										<field name="allocation_date"/>
+										<field name="remarks"/>
+										<field name="color"/>
+										<field name="priority"/>
+--> 
+               <t t-name="kanban-box">           
+					  <t t-if="kanban_state === 'blocked'" t-set="border">oe_kanban_color_red</t>
+                      <t t-if="kanban_state === 'done'" t-set="border">oe_kanban_color_green</t>
+                              <div t-attf-class="#{kanban_color(color)} #{border || ''}">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                     <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                      <tr>
+                                        <td align="left" valign="middle" width="16">
+                                            <a t-if="record.priority == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                            <a t-if="record.priority != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                        </td>
+                                        <td align="left" valign="middle" class="oe_kanban_title" tooltip="ticket_assign_details">
+                                            <field name="name"/>
+                                        </td>
+                                        <td valign="top" width="22">
 
+                                            <img t-att-src="kanban_gravatar(record.sal_per_id.value, 22)" class="oe_kanban_gravatar" t-att-title="record.sal_per_id.value"/>
 
+                                        </td>
+                                      </tr>
+                                    </table>
+                                    
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
+                                        <div class="oe_kanban_description">
+                                            <t t-esc="record.remarks.value"/>
+                                            <i t-if="record.allocation_date">
+                                                <t t-if="record.remarks.value">, </t>
+                                                <field name="allocation_date"/>
+<!--
+                                                <t t-if="record.priority.raw_value"><field name="priority" /> </t>
+-->
+                                               
+                                            </i>
 
-    <!-- CRM Lead Kanban View  -->
-<!--    <record model="ir.ui.view" id="crm_case_kanban_view_leads">-->
-<!--        <field name="name">Ticket Log Kanban</field>-->
-<!--        <field name="model">ticket.allocation</field>-->
-<!--        <field name="type">kanban</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <kanban>-->
-<!--                <field name="sales_person_id"/>-->
-<!--                <templates>-->
-<!--                <t t_name="kanban-box">-->
-<!--                    <div class="oe_kanban_box">-->
-<!--                        <div class="oe_kanban_box_header">-->
-<!--                           Title-->
-<!--                        </div>-->
-<!--                    <div class="oe_kanban_box_content oe_kanban_box_show_onclick_trigger">-->
-<!--                         Content-->
-<!--                    </div>-->
-<!--                    <div class="oe_kanban_left">-->
-<!--                        <a string="Edit" icon='gkt-edit' type="edit"/>-->
-<!--                        <a string="Change Color" icon="color-picker" type="color" name="color"/>-->
-<!--                        Other Buttons-->
-<!--                        </div>-->
-<!--                        <br class="oe_kanban_clear"/>-->
-<!--                    </div>-->
-<!--             -->
-<!--           </t>-->
+                                        </div>
+                                        <div class="oe_kanban_clear"/>
+                                    </div>
+                                    
+									    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
 
-<!--                </templates>-->
-<!--            </kanban>-->
-<!--        </field>-->
-<!--    </record>-->
-
-
-            
-
+                                        </div>
+                                        <div class="oe_kanban_right">
+<!--
+                                            <a name="set_kanban_state_blocked1" string="Mark as Blocked" kanban_states="normal,done" type="object" icon="kanban-stop"/>
+                                            <a name="set_kanban_state_normal1" string="Normal" kanban_states="blocked,done" type="object" icon="gtk-media-play"/>
+                                            <a name="set_kanban_state_done1" string="Done" kanban_states="blocked,normal" type="object" icon="kanban-apply"/>
+-->
+                                        </div>
+                                        <div class="oe_kanban_clear"/>
+										</div>
+								</div>
+								</div>	 
+								</t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
    </data>
 </openerp>

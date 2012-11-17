@@ -31,6 +31,7 @@ class pos_make_payment(osv.osv_memory):
     _name = 'pos.make.payment'
     _description = 'Point of Sale Payment'
     def check(self, cr, uid, ids, context=None):
+        print "file: wiz/pos_payment.py/ funct check"
         """Check the order:
         if the order is not paid: continue payment,
         if the order is paid print ticket.
@@ -57,6 +58,7 @@ class pos_make_payment(osv.osv_memory):
         return self.launch_payment(cr, uid, ids, context=context)
 
     def launch_payment(self, cr, uid, ids, context=None):
+        print "file: wiz/pos_payment.py/ funct launch_payment"
         return {
             'name': _('Paiement'),
             'view_type': 'form',
@@ -69,6 +71,7 @@ class pos_make_payment(osv.osv_memory):
         }
 
     def print_report(self, cr, uid, ids, context=None):
+        print "file: wiz/pos_payment.py/ funct print_report"
         active_id = context.get('active_id', [])
         datas = {'ids' : [active_id]}
         return {
@@ -78,10 +81,12 @@ class pos_make_payment(osv.osv_memory):
         }
 
     def _default_journal(self, cr, uid, context=None):
+        print "file: wiz/pos_payment.py/ funct _default_jornal"
         res = pos_box_entries.get_journal(self, cr, uid, context=context)
         return len(res)>1 and res[1][0] or False
 
     def _default_amount(self, cr, uid, context=None):
+        print "file: wiz/pos_payment.py/ funct _default_amount"
         order_obj = self.pool.get('pos.order')
         active_id = context and context.get('active_id', False)
         if active_id:

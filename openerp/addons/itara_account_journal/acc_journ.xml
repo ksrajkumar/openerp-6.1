@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_journal_form_inherit" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit</field>
+            <field name="model">account.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+        <xpath expr='/form/notebook/page/group/field[@name="allow_date"]' position="after">
+            <field name='cheque'/>
+        </xpath>
+
+            </field>
+        </record>
+        
+        <record id="account_voucher_pay_form_inherit" model="ir.ui.view">
+            <field name="name">account.voucher.pay.form.inherit</field>
+            <field name="model">account.voucher</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_receipt_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='/form/group/field[@name="account_id"]' position="after">
+                    <field name='cheque'/>
+                    <field name='credit_card'/>
+                    <group col="6" colspan="4">
+                    <field name='cheque_no' attrs="{'invisible' : [('cheque','!=',1)]}"/>
+                    <field name='cheque_date' attrs="{'invisible' : [('cheque','!=',1)]}"/>
+                    <field name='bank_name' attrs="{'invisible' : [('cheque','!=',1)]}"/>
+                    <field name='cheque_clear' attrs="{'invisible' : [('cheque','!=',1)]}"/>
+                    </group>
+                </xpath>
+                <xpath expr="//notebook[@colspan='4']" position="inside">
+                    <page string="Credit Card Info"  attrs="{'invisible': [('credit_card','!=',True)]}"  >
+                    <field name='cc_number' />
+                    <field name='cc_name' />
+                    <field name='cc_b_addr_1' />
+                    <field name='cc_b_addr_2' />
+                    <field name='cc_city' />
+                    <field name='cc_state' />
+                    <field name='cc_zip' />
+                    <field name='cc_country'/>
+                    <field name='cc_v' />
+                    <field name='cc_e_d_month' />
+                    <field name='cc_e_d_year' />
+                    <field name='cc_comment' />
+                    <field name='cc_auth_code'/>
+                     </page>
+                </xpath>
+            </field>
+        </record>
+        
+        
+        
+        
+    </data>
+</openerp>
+
+
+
+
+

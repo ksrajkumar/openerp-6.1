@@ -538,6 +538,46 @@ class stock_picking(osv.osv):
     _name = "stock.picking"
     _description = "Picking List"
 
+    #def __init__(self, cr, uid):
+        #super(stock_picking, self).__init__(cr, uid)
+        #print "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
+        
+        
+    #def _function(self, cr, uid,ids,args,name, context=None):
+        #print "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
+        #r = 1
+        #return True
+    def _compute_lines(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        print ids,'idssss'
+        for i in self.browse(cr,uid,ids,context=context):
+            b = self.pool.get('account.invoice').search(cr,uid,[('origin','=',i.origin)])
+            c = self.pool.get('account.invoice').browse(cr,uid,b)
+            print c
+            for invoice in c:
+                src = []
+                lines = []
+                print invoice,'invcoice'
+                if invoice.move_id:
+                    print invoice.move_id,'invoice move id'
+                    print invoice.move_id.line_id,'invoice move id line id'
+                    for m in invoice.move_id.line_id:
+                        temp_lines = []
+                        if m.reconcile_id:
+                            print m.reconcile_id,'moooooooooooooo'
+                            temp_lines = map(lambda x: x.id, m.reconcile_id.line_id)
+                            print m.reconcile_id.line_id,'reccccccccccccc'
+                        elif m.reconcile_partial_id:
+                            temp_lines = map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                        lines += [x for x in temp_lines if x not in lines]
+                        src.append(m.id)
+                print lines,'lines'
+                lines = filter(lambda x: x not in src, lines)
+                print lines,'lines'
+                result[i.id] = lines
+                print result,'result'
+        return result
+
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context=None):
         """ Calculates planned date if it is greater than 'value'.
         @param name: Name of field
@@ -585,6 +625,7 @@ class stock_picking(osv.osv):
         """ Finds minimum and maximum dates for picking.
         @return: Dictionary of values
         """
+        print ids,'iddddddddddddddddddddddddd'
         res = {}
         for id in ids:
             res[id] = {'min_date': False, 'max_date': False}
@@ -638,6 +679,8 @@ class stock_picking(osv.osv):
                  "* Waiting: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"\
                  "* Done: has been processed, can't be modified or cancelled anymore\n"\
                  "* Cancelled: has been cancelled, can't be confirmed anymore"),
+        #'balance':fields.float('Balance'),
+        #'balance':fields.function(_function,multi='balan',string='Balance',method=True,type='boolean'),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
         'date': fields.datetime('Order Date', help="Date of Order", select=True),
@@ -654,6 +697,7 @@ class stock_picking(osv.osv):
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
+        'payment_id': fields.function(_compute_lines, relation='account.move.line', type="many2many",string='Payments'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',

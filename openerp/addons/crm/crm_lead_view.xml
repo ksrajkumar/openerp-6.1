@@ -535,8 +535,8 @@
                         <field name="fax"/>
                         <field name="mobile"/>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Categorization" colspan="2"/>
+                    <group colspan="2" col="2" >
+                        <separator string="Categorization" colspan="2" />
                         <field name="type_id" widget="selection" groups="base.group_extended"/>
                         <field name="channel_id" widget="selection"/>
                     </group>

@@ -18,16 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
-
+from osv import osv
+import pooler
+import re
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
 import netsvc
 from datetime import date
+
 
 class opp_contact_address(osv.osv):
     _name="opp.contact.address"
@@ -57,7 +59,7 @@ class product_lead(osv.osv):
     	'item_model' : fields.char('Item Model', size=128),
     	'lead_id' : fields.many2one('crm.lead','Lead'),
     }
-    
+
     def onchange_product_id(self,cr, uid, ids, product_id):
     	#if product_id:
     	val = {}
@@ -101,6 +103,21 @@ class crm(osv.osv):
                 raise osv.except_osv(_('ID No Alredy Generated !'),
                     _('ID No Alredy Generated!'))
         return True
+        
+    #def onchange_section_id(self,cr,uid,ids,section):
+        #print section,'section'
+        #res={}
+        #self.cr.execute("(select * from sale_member_rel where section_id = %s)",(section))
+        #res=self.cr.dictfetchall()
+        #print res,'iiiiiiiiiii'
+        #return {'value': {'user_id': 3}}
+        
+    
+    def _get_section(self, cr, uid, context=None):
+        """Gives section id for current User
+        """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.context_section_id.id or False
     
     def create(self, cr, user, vals, context=None):
        # if ('name' not in vals) or (vals.get('name')=='/'):
@@ -117,6 +134,7 @@ class crm(osv.osv):
 
     _columns = {
         'id_number':fields.char('ID Number',size=64, readonly=True),
+    'email_text':fields.char('E-Mail ID',size=256),
 	'birth_date' : fields.date('Birth date'),
 	'age':fields.char('Age',size=68),
 	'addition_contact':fields.one2many("opp.contact.address",'add_cont_id','Additional Contacts'),
@@ -125,10 +143,12 @@ class crm(osv.osv):
 #	'tick_link_id':fields.many2one('ticket.list','Tickets', domain="['&',('sal_per_id','=',uid), ('allocation_date','<', time.strftime('%Y-%m-%d 23:59:59').encode('utf8')), ('allocation_date','>=', time.strftime('%Y-%m-%d 00:00:00').encode('utf8'))]"),
 	'tick_link_id':fields.many2one('ticket.list','Tickets', domain="['&',('sal_per_id','=',uid), ('allocation_date','<', time.strftime('%Y-%m-%d 23:59:59')), ('allocation_date','>=', time.strftime('%Y-%m-%d 00:00:00'))]"),
    	'product_line' : fields.one2many('product.lead','lead_id','Product'),
+    'user_section_id': fields.many2one('crm.case.section', 'Sales Team'),
 
      }
     _defaults = {
          'id_number': lambda obj, cr, uid, context: '/',
+         'user_section_id': _get_section,
      }
 
     def onchange_birth_date(self,cr, uid, ids, birth_date):

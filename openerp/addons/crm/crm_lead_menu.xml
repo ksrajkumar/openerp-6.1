@@ -30,9 +30,11 @@
     <menuitem id="base.menu_sales" name="Sales"
         parent="base.menu_base_partner" sequence="1" />
 
+<!--
     <menuitem parent="base.menu_sales" name="Leads"
         id="menu_crm_case_categ0_act_leads"
         action="crm_case_category_act_leads_all" sequence="1" />
+-->
 
 
      <act_window
@@ -57,7 +59,7 @@
             view_type="form"/>
 
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
-          <field name="name">Opportunities</field>
+          <field name="name">Leads</field>
           <field name="res_model">crm.lead</field>
           <field name="view_mode">kanban,tree,form,graph,calendar</field>
           <field name="domain">[('type','=','opportunity')]</field>
@@ -100,7 +102,7 @@ You and your team(s) will be able to plan meetings and phone calls from opportun
      <menuitem id="base.menu_sales" name="Sales"
          parent="base.menu_base_partner" sequence="1" />
 
-     <menuitem name="Opportunities" id="menu_crm_case_opp"
+     <menuitem name="Leads" id="menu_crm_case_opp"
          parent="base.menu_sales" action="crm_case_category_act_oppor11"
          sequence="2" />
 

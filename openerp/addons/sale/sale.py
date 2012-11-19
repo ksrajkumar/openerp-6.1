@@ -281,7 +281,7 @@ class sale_order(osv.osv):
     _defaults = {
         'picking_policy': 'direct',
         'date_order': fields.date.context_today,
-        'order_policy': 'manual',
+        'order_policy': 'prepaid',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
@@ -532,6 +532,7 @@ class sale_order(osv.osv):
         invoice = self.pool.get('account.invoice')
         obj_sale_order_line = self.pool.get('sale.order.line')
         partner_currency = {}
+        print 'acccccccccccccccccccccccccacc'
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the

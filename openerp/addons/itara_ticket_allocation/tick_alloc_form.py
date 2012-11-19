@@ -83,9 +83,9 @@ class ticket_allocation(osv.osv):
     def tick_generation(self, cr, uid, ids,*args):
         for o in self.browse(cr, uid, ids, context={}):
             seq_no = self.pool.get('ir.sequence').get(cr, uid, 'ticket.number.seq')
-            print o, "===", o.id, o.sales_person_id, o.alloc_date, o.entity_data_id.id, o.entity_data_id.ent_num
+            print o, "===", o.id, o.sales_person_id, o.alloc_date, o.entity_data_id.id, o.entity_data_id.ent_num,'=====',o.sales_person_id.context_section_id.code
             jx=self.pool.get('ticket.list').create(cr, uid, 
-                        {'name': o.sales_person_id.code+str(time.strftime("%d%m%Y"))+seq_no, 
+                        {'name': o.sales_person_id.context_section_id.code+o.sales_person_id.code+str(time.strftime("%d%m%Y"))+seq_no, 
                         'add_tick_id':o.id, 
                         'sal_per_id':o.sales_person_id.id, 
                         'allocation_date':o.alloc_date,

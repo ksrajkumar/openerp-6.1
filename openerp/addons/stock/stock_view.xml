@@ -930,6 +930,9 @@
                                     <field name="location_id"/>
                                     <field name="date"/>
                                     <field name="state"/>
+<!--
+                                    <field name="balance"/>
+-->
                                     <button name="%(action_partial_move_server)d" string="Process" type="action" states="confirmed,assigned" icon="gtk-go-forward"/>
                                 </tree>
                                 <form string="Stock Moves">
@@ -1008,6 +1011,21 @@
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
+                        </page>
+                        <page string="Payments History">
+                            <field name="payment_id" colspan="4" nolabel="1">
+                                <tree string="Payments">
+                                    <field name="date"/>
+                                    <field name="move_id"/>
+                                    <field name="ref"/>
+                                    <field name="name"/>
+                                    <field name="journal_id" groups="base.group_user"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency_id"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </form>

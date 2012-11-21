@@ -651,7 +651,7 @@
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity / Customer"
                     filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
-                <field name="user_id">
+                <field name="user_id" >
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Opportunities" />

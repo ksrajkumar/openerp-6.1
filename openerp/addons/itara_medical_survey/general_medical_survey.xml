@@ -69,7 +69,8 @@
             <field name="view_id" ref="general_medical_tree"/>              
         </record>
 
-        <menuitem id="medical_survey_menu" name="Survey"/>
+        <menuitem id="medical_survey_menu" name="Survey" web_icon="images/sur_logo.jpg"
+           web_icon_hover="images/sur_hover.jpeg"/>
         <menuitem
             action="general_medical_survey_form1"
             id="menu_general_medical_survey_id"

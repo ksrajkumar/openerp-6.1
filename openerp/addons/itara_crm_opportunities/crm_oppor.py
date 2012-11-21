@@ -21,7 +21,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
-from osv import osv
+from osv import osv, fields
 import pooler
 import re
 from osv import fields, osv
@@ -88,11 +88,20 @@ class partner(osv.osv):
 
 partner()
 
-
+class move_link(osv.osv):
+    _name = 'move.link'
+    _columns = {
+        'date': fields.char('Date', size=64),
+        'name':fields.char('History',size=128),
+        'state':fields.char('State',size=64),
+        'move_id':fields.many2one('crm.lead','History'),
+    }
+move_link()
 
 class crm(osv.osv):
     _inherit = "crm.lead"
 
+        
 ####3#Seq Id Generation#########
     def id_generation(self, cr, uid, ids,*args):
         for o in self.browse(cr, uid, ids, context={}):
@@ -104,14 +113,56 @@ class crm(osv.osv):
                     _('ID No Alredy Generated!'))
         return True
         
-    #def onchange_section_id(self,cr,uid,ids,section):
-        #print section,'section'
-        #res={}
-        #self.cr.execute("(select * from sale_member_rel where section_id = %s)",(section))
-        #res=self.cr.dictfetchall()
-        #print res,'iiiiiiiiiii'
-        #return {'value': {'user_id': 3}}
         
+    #def _get_default_user(self, cr, uid, context=None):
+        #"""Gives current user id
+       #:param context: if portal in context is false return false anyway
+        #"""
+        #if context and context.get('portal', False):
+            #return False
+        #return uid
+    
+    
+    def movement(self,cr,uid,ids,context=None):
+        print 'movement'
+        ii = self.browse(cr,uid,ids,context=context)
+        for i in ii:
+            user = i.move_user_id
+            dept = i.move_sale_department
+            #print user ,'===',dept,'===',user.id,'====',str(time.strftime('%Y-%m-%d %H:%M:%S')),'====',i.state
+            if user and dept :
+                his =i.user_id.name + '---->' + i.move_user_id.name
+                mov = {
+                'move_id' : i.id,
+                'date':str(time.strftime('%Y-%m-%d %H:%M:%S')),
+                'name':his,
+                'state':i.state,
+                }
+                #print i.id,'came',uid,'=====uid'
+                self.write(cr,uid,ids,{'user_id':user.id,'user_section_id':dept.id})
+                #print 'userid'
+                self.write(cr,uid,ids,{'move_user_id':False,'move_sale_department':False})
+                #print 'move_id'
+                self.pool.get('move.link').create(cr,uid,mov,context=context)
+                value = {
+                'name': _('Leads'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'crm.lead',
+                'view_id': False,
+             #   'views': [(form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree')],
+                'type': 'ir.actions.act_window',
+              #  'search_view_id': search_view and search_view[1] or False,
+                'nodestroy': True
+                }
+                print context,'cccccccccc'
+            else:
+                raise osv.except_osv(_('ERROR !'),
+                    _('Please select Sales Department or User !'))
+        return value
+
+
     
     def _get_section(self, cr, uid, context=None):
         """Gives section id for current User
@@ -144,12 +195,15 @@ class crm(osv.osv):
 	'tick_link_id':fields.many2one('ticket.list','Tickets', domain="['&',('sal_per_id','=',uid), ('allocation_date','<', time.strftime('%Y-%m-%d 23:59:59')), ('allocation_date','>=', time.strftime('%Y-%m-%d 00:00:00'))]"),
    	'product_line' : fields.one2many('product.lead','lead_id','Product'),
     'user_section_id': fields.many2one('crm.case.section', 'Sales Team'),
-
+    'move_sale_department':fields.many2one('crm.case.section', 'Sales Team'),
+    'move_user_id':fields.many2one('res.users', 'Salesman'),
+    'move_hist': fields.one2many('move.link','move_id','Movement History',readonly=True),
      }
     _defaults = {
          'id_number': lambda obj, cr, uid, context: '/',
          'user_section_id': _get_section,
      }
+
 
     def onchange_birth_date(self,cr, uid, ids, birth_date):
         val = {}
@@ -231,3 +285,6 @@ class crm(osv.osv):
   #      return value
 
 crm()
+
+
+

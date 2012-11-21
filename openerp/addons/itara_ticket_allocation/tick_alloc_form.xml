@@ -53,15 +53,20 @@
 
 
 	<record id="action_ticket_allocation_form1" model="ir.actions.act_window">
-            <field name="name">Ticket allocation</field>
+            <field name="name">Ticket Allocation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ticket.allocation</field>
             <field name="view_type">form</field>   
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="tick_alloc_tree"/>              
         </record>
 
-<menuitem id="base.menu_crm_ticket_allocation" name="Ticket Allocation" action="action_ticket_allocation_form1"
-            parent="base.menu_sales" sequence="3" groups="base.group_sale_manager"/>
+        <menuitem id="menu_view_ticket_allocation" name="Ticket Allocation" web_icon="images/tick.jpg"
+                                    web_icon_hover="images/tick_hover.jpg" />
+        <menuitem action="action_ticket_allocation_form1" id="menu_view_sub_ticket_allocation" parent="menu_view_ticket_allocation" sequence="1"/>
+
+<!--<menuitem id="base.menu_crm_ticket_allocation" name="Ticket Allocation" action="action_ticket_allocation_form1"-->
+<!--            parent="base.menu_sales" sequence="3" groups="base.group_sale_manager"/>-->
             
             <!--############### SEQ NO ######### -->	
     <record id="seq_type_ticket_number_id" model="ir.sequence.type">
@@ -148,8 +153,13 @@
             <field name="view_id" ref="entity_data_tree"/>              
         </record>
 
-<menuitem id="menu_crm_entity_data" name="Entity" action="action_entity_data_form1"
-            parent="base.menu_sales" sequence="6" groups="base.group_sale_manager"/>
+<!--<menuitem id="menu_crm_entity_data" name="Entity" action="action_entity_data_form1"-->
+<!--            parent="base.menu_sales" sequence="6" groups="base.group_sale_manager"/>-->
+
+<menuitem id="menu_ticket_entity_data" name="Entity" action="action_entity_data_form1"
+            parent="menu_view_ticket_allocation" sequence="2"/>
+
+
             
 
    </data>

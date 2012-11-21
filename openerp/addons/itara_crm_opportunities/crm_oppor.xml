@@ -16,7 +16,10 @@
             <field name="date_action" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
             <field name="title_action" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
             <field name="priority" position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
-
+             <field name='email_cc'  position = "attributes">  <attribute name = "invisible">1</attribute>  </field>
+             <xpath expr='/form/notebook/page[@string="Communication &amp; History"]/button[@string="Send New Email"]' position="attributes">
+            <attribute name = "invisible">1</attribute> 
+            </xpath>
 <!--
  field hidden in opportunity  
 -->
@@ -112,6 +115,34 @@
 <!--########################itara###########################-->
                         </page>
                         </page>
+                        
+                        
+        <page string = "Communication &amp; History" position="after">
+			<page string = "Move To">
+                <group col='2' colspan='2'>
+                    <field name = "move_sale_department"  />
+                    <field name = "move_user_id" domain="[('context_section_id', '=', move_sale_department)]"/>
+                </group>
+
+
+
+                <group col='2' colspan='2'>
+                    <field colspan="2" name="move_hist" nolabel="1">
+                                 <tree string="Movement History" editable="bottom">
+                                     <field name="date"/>
+                                   <field name="name"/> 
+                                   <field name="state"/>
+                                 </tree>
+                                <form string="Movement History">
+                                     <field name="date"/>
+                                   <field name="name"/> 
+                                   <field name="state"/>
+                                 </form>                          
+                            </field>
+                <button name = "movement" type="object" string="Confirm" icon="gtk-redo"/> 
+                </group>
+            </page>
+        </page>
                </field>
         </record>
 
@@ -235,6 +266,30 @@
             res_model="general.medical.survey"
             src_model="crm.lead"/>    -->
 
-
+            <record id="move_hist_tree" model="ir.ui.view">
+            <field name="name">move.history.tree</field>
+            <field name="type">tree</field>
+            <field name="model">move.link</field>
+            <field name="arch" type="xml">
+                <tree string ="Move History"> 
+	               		<field name="name"/>  
+                </tree>
+            </field>	
+        	</record>
+            
+            
+            <record id="move_hist_form" model="ir.ui.view">
+            <field name="name">move.history.form</field>
+            <field name="type">form</field>
+            <field name="model">move.link</field>
+            <field name="arch" type="xml">
+                <tree string ="Move History"> 
+	               		<field name="name"/>  
+                </tree>
+            </field>	
+        	</record>
+            
+            
+            
         </data>
 </openerp>

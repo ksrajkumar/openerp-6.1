@@ -115,7 +115,7 @@
     
     <!--<menuitem id="view_ticket_assign_test" name="Ticket Assign" action="action_ticket_assign_tree1"
             parent="base.menu_sales" sequence="3" groups="base.group_sale_manager"/>-->
-        <menuitem action="view_ticket_module" id="menu_view_sub_ticket_module_mrp" parent="base.menu_sales" />
+        <menuitem action="view_ticket_module" id="menu_view_sub_ticket_module_mrp" parent="menu_view_ticket_allocation" />
             
             
 <!--     TICKET ASSIGN VIEW       -->

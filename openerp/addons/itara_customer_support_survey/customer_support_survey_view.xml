@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+       <record id="customer_support_survey_form" model="ir.ui.view">
+            <field name="name">customer.support.survey.form</field>            
+            <field name="model">customer.support.survey</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+	        <form string="Customer Support Survey">
+	            <field name="tick_link_id"/>
+                <field name="name" on_change="onchange_customer_invoice(name)"/>
+                <field name="phone_number"/>
+                <field name="email"/>
+                <field name="current_weight"/>
+                <group colspan="4">
+                <field name="notes"/>
+                </group>
+                <notebook colspan="5">
+                        <page string="Current Status">
+                            <newline/>
+                            <field colspan="4"  name="current_status_id" nolabel="1" widget="one2many_list">
+                                
+                                <form string="Current Status">
+                                    <field name="name"  widget="selection" colspan="4"/>
+                                    <field name="weight_gain" colspan="4" attrs="{'invisible': [('name', '!=', 3)]}"/>
+                                </form>
+                                
+                                <tree string="Current Status of the Customer">
+                                    <field name="name"/>
+                                </tree>
+                                
+                            </field>
+                        </page>
+                        
+                        <page string="Customer History">
+                        <newline/>
+<!--                        <field name="custo_hist" domain="['|','&amp;',('partner_id','=','name'),('type','=','out_invoice')]"/>-->
+                            <field name="custo_hist"/>
+                        </page>
+                </notebook>
+            </form>
+            </field>
+       </record>
+
+
+       <record id="customer_support_survey_tree" model="ir.ui.view">
+            <field name="name">customer.support.survey.tree</field>
+            <field name="type">tree</field>
+            <field name="model">customer.support.survey</field>
+            <field name="arch" type="xml">
+	        <tree string="Customer Support Survey">
+	            <field name="tick_link_id"/>
+                <field name="name"/>
+                <field name="phone_number"/>
+                <field name="email"/>
+                <field name="current_weight"/>
+                <field name="notes"/>
+            </tree>
+            </field>
+       </record>
+
+
+       <record id="customer_support_survey_action" model="ir.actions.act_window">
+            <field name="name">Customer Support Survey </field>
+            <field name="res_model">customer.support.survey</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="customer_support_survey_tree"/>
+       </record>
+        
+        <menuitem id="menu_view_customer_support_survey" name=" Customer Support Survey" web_icon="images/cus_sup.jpg"
+                                    web_icon_hover="images/cus_sup_hover.jpg" />
+        <menuitem action="customer_support_survey_action" id="menu_view_sub_customer_support_survey_module" parent="menu_view_customer_support_survey" sequence="1"/>
+
+
+        <record id="current_status_many_form" model="ir.ui.view">
+            <field name="name">customer.support.survey.many.form</field>
+            <field name="model">current.status.many</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Current Status ">
+		            <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="current_status_many_tree" model="ir.ui.view">
+            <field name="name">customer.support.survey.many.tree</field>
+            <field name="model">current.status.many</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Current Status">
+		            <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+<!--        <record id="current_status_many_action" model="ir.actions.act_window">-->
+<!--            <field name="name">Current Status Master </field>-->
+<!--            <field name="res_model">current.status.many</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--           <field name="view_id" ref="current_status_many_tree"/>-->
+<!--        </record>-->
+<!--        -->
+<!--        <menuitem id="menu_view_current_status_many_config" name=" Current Status Module" parent="menu_view_sub_customer_support_survey_module"/>-->
+<!--        <menuitem action="current_status_many_action" id="menu_view_sub_current_status_many_mrp" parent="menu_view_current_status_many_config" sequence="1"/>-->
+
+</data>
+</openerp>

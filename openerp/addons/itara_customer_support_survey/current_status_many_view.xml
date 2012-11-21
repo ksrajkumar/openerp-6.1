@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+	
+        <record id="current_status_many_tree" model="ir.ui.view">
+            <field name="name">current.status.many.tree</field>
+            <field name="model">current.status.many</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Current Status">
+                	<field name="name"/>
+                </tree>
+		  </field>
+	   </record>
+
+
+        <record id="current_status_many_form" model="ir.ui.view">
+            <field name="name">current.status.many.form</field>
+            <field name="model">current.status.many</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Current Status">
+                	<field name="name"/>
+                </form>
+		  </field>
+	   </record>
+
+</data>
+</openerp>

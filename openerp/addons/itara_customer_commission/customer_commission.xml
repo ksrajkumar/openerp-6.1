@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="customer_commission_form1" model="ir.ui.view">
+            <field name="name">customer.commission.form1</field>
+            <field name="type">form</field>
+            <field name="model">cus.commission.master</field>
+            <field name="arch" type="xml">
+            <form string="Customer Points">
+                <group colspan="4" col="7">
+	               <field name="name" />  
+	               <field name="com_points"/>  
+                </group>
+                
+            </form>
+            </field>
+        </record>
+
+        <record id="customer_commission_tree1" model="ir.ui.view">
+            <field name="name">customer.commission.tree1</field>
+            <field name="type">tree</field>
+            <field name="model">cus.commission.master</field>
+            <field name="arch" type="xml">
+                <tree string ="Customer Points"> 
+	               		<field name="name"/>  
+	               		<field name="com_points"/>  
+                </tree>
+            </field>	
+        </record>
+
+
+        <record id="action_customer_commission_form1" model="ir.actions.act_window">
+            <field name="name">Customer Points</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cus.commission.master</field>
+            <field name="view_type">form</field>   
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="customer_commission_tree1"/>              
+        </record>
+
+    <menuitem id="menu_view_customer_commission1" name="Customer Points" />
+    <menuitem action="action_customer_commission_form1" id="menu_view_customer_commission_points" parent="menu_view_customer_commission1" sequence="1"/>
+
+        <record id="view_inv_customer_for_commission" model="ir.ui.view">
+           <field name="name">account.inv.customer.for.comm</field>
+           <field name="model">account.invoice</field>
+           <field name="type">form</field>
+           <field name="inherit_id" ref="account.invoice_form"/>
+           <field name="arch" type="xml">
+           <button name="invoice_open" position="after">
+               <button name="get_commission_point" type="object" string="Get Points" states="open" icon="gtk-go-forward"/>
+           </button>
+           </field>
+        </record>
+
+
+
+
+        <record id="commission_points_form1" model="ir.ui.view">
+            <field name="name">commission.points.form1</field>
+            <field name="type">form</field>
+            <field name="model">commission.points.master</field>
+            <field name="arch" type="xml">
+            <form string="Commission Points Value">
+                <group colspan="4" col="7">
+	               <field name="name" />  
+	               <field name="amt_starts"/>  
+                   <field name="amt_ends"/>  
+                   <field name="points"/>  
+                   <field name="point_amt"/>  
+                </group>
+                
+            </form>
+            </field>
+        </record>
+
+        <record id="commission_points_tree1" model="ir.ui.view">
+            <field name="name">commission.points.tree1</field>
+            <field name="type">tree</field>
+            <field name="model">commission.points.master</field>
+            <field name="arch" type="xml">
+                <tree string ="Commission Points Value"> 
+	               <field name="amt_starts"/>  
+                   <field name="amt_ends"/>  
+                   <field name="points"/>  
+                   <field name="point_amt"/>  
+                </tree>
+            </field>	
+        </record>
+
+
+        <record id="action_commission_points_form1" model="ir.actions.act_window">
+            <field name="name">Commission Points Value</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">commission.points.master</field>
+            <field name="view_type">form</field>   
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="commission_points_tree1"/>              
+        </record>
+
+    <menuitem action="action_commission_points_form1" id="menu_view_commission_points_value" parent="menu_view_customer_commission1" sequence="1"/>
+
+
+
+   </data>
+</openerp>

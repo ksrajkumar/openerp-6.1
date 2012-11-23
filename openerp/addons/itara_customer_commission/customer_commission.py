@@ -35,133 +35,176 @@ class cus_commission_master(osv.osv):
     _columns={
         'name':fields.many2one('res.partner','Customer Name'),
         'com_points':fields.integer('Points'),
+        'commission_amt':fields.integer("Commission Amount"),
+        'on2may':fields.one2many('com.point.history','may2on', "Points History", readonly=True)
     }
+    
 cus_commission_master()
 
+class com_point_history(osv.osv):
+    _name="com.point.history"
+    _description="Commission Points History"
+    
+    
+    def _after_cal_inv(self, cr, uid, ids,name,args, context=None):
+        res={}
+        print 'called'
+        his_class = self.browse(cr, uid, ids[0])
+        print his_class, "f888888888888888888888888*************************************"
+        invoice_id = his_class.in_id
+        print invoice_id, "INVOICE INVOICEINVOICEINVOICEINVOICEINVOICEINVOICE" 
+        inv_class = self.pool.get('account.invoice').search(cr, uid, [('id','=',invoice_id)])
+        inv_br = self.pool.get('account.invoice').browse(cr, uid, inv_class)
+        print inv_br,'inv_br'
+        for i in inv_br:
+            print i.number,'------',i.date_invoice
+            self.write(cr,uid, ids[0], {
+            'date':i.date_invoice,
+            'name':i.number
+            })
+            res[his_class.id]= 87
+        return res
+        
+        
+    _columns={
+          'name':fields.char('Invoice No.', size=128),
+          'date':fields.char("Invoice Date", size=256),
+          'in_id':fields.integer("Invoice ID"),
+          'c_point':fields.integer("Points"),
+          'c_amount':fields.integer("Commission Amount"),
+          'i_amount':fields.integer("Invoice Amount"),
+          'may2on':fields.many2one("cus.commission.master",'Poinnt link history'),
+          'aft_inv_gen':fields.function(_after_cal_inv, string=' ', method=True, type="integer"),
+        }
+        
+
+        
+com_point_history()
 
 class commission_points_master(osv.osv):
     _name="commission.points.master"
     _description="Commission points value master"
     _columns={
         'name':fields.char("Name",size=128),
-        'amt_starts':fields.integer("Amounts Starts"),
-        'amt_ends':fields.integer("Amounts Ends"),
-        'points':fields.integer("Points"),
-        'point_amt':fields.integer("Amount"),
+        'amt_starts':fields.integer("Amounts Starts", required=True),
+        'amt_ends':fields.integer("Amounts Ends",required=True),
+        'points':fields.integer("Points",required=True),
+        'point_amt':fields.integer("Amount",required=True),
         }
 commission_points_master()
 
 
 class invoice(osv.osv):
     _inherit = 'account.invoice'
-
+    _columns={
+        'amt_bool':fields.boolean('Amt Boolean'),
+        'amt_bool1':fields.boolean('Amt Boolean1'),
+        'less_amt':fields.integer("Less Amt"),
+        'point_p':fields.integer("Commission Points"),
+        'amount_a':fields.integer("Commission Amount(-)"),
+    }
+    _defaults={
+            'amt_bool':False,
+            'amt_bool1':False,
+    }
+    
     def get_commission_point(self, cr, uid, ids, context=None):
         print ids,"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"
         inv = self.browse(cr, uid, ids[0], context=context)
         print inv.amount_total, inv.partner_id,"tot tot toto tot tot tot"
-        point_dict={3000:10, 5000:15, 8000:20, 10000:25, 15000:30, 20000:50,}
+        #point_dict={3000:10, 5000:15, 8000:20, 10000:25, 15000:30, 20000:50,}
+        commission_points=self.pool.get('commission.points.master')
+        com_point_list=commission_points.search(cr, uid, [('id','>=',1)])
+        comm_point_br=commission_points.browse(cr, uid, com_point_list, context=None)
+                
+        p_dic,dic_point,dic_amt={},{},{}
+        len_point=len(comm_point_br)
+        print len_point
+        for c in range(len_point):
+            each_dic_poin={comm_point_br[c].amt_starts:comm_point_br[c].points}
+            each_dic_amt={comm_point_br[c].amt_starts:comm_point_br[c].point_amt}
+            dic_point.update(each_dic_poin)
+            dic_amt.update(each_dic_amt)
+            if c < len_point-1:
+                print c
+                each_dic={comm_point_br[c].amt_starts:comm_point_br[c+1].amt_starts}
+                print each_dic,"))))))))))))))))))))))))))))))))))))"
+                p_dic.update(each_dic)
+        
         part_id = self.pool.get('cus.commission.master').search(cr, uid, [('name','=',inv.partner_id.id)])
         if len(part_id) > 0:
             com=self.pool.get('cus.commission.master').browse(cr,uid,part_id[0])
             print com,"LLLLLLLLLLLLLLLLLLLLLLL",com.id
         print part_id,"partner partner partner partner"
-        
-        if inv.amount_total >= 3000 and inv.amount_total <5000:
-            if len(part_id) > 0:
-                self.pool.get('cus.commission.master').write(cr, uid,part_id[0],{'name':inv.partner_id.id, 'com_points':point_dict[3000]+com.com_points})
-            else:
-                self.pool.get('cus.commission.master').create(cr, uid,{'name':inv.partner_id.id, 'com_points':point_dict[3000]})
+        for k,v in p_dic.iteritems():
+            print k,v, "LKJJJJJJJJJJJJJJJJJJJJ"
+            if inv.amount_total >= k and inv.amount_total < v:
+                if len(part_id) > 0:
+                    self.pool.get('cus.commission.master').write(cr, uid,part_id[0],{'name':inv.partner_id.id, 'com_points': dic_point[k]+com.com_points, 'commission_amt':dic_amt[k]+com.commission_amt })  #point_dict[3000]+com.com_points})
+                    self.write(cr, uid, ids,{'amt_bool': True, 'point_p':dic_point[k]+com.com_points , 'amount_a':dic_amt[k]+com.commission_amt } )
+                else:
+                    self.pool.get('cus.commission.master').create(cr, uid,{'name':inv.partner_id.id, 'com_points': dic_point[k], 'commission_amt': dic_amt[k] }) #point_dict[3000]})
+                    self.write(cr, uid, ids,{'amt_bool': True, 'point_p':dic_point[k] , 'amount_a':dic_amt[k] } )
 
+        return True
+    
+    def use_comm_points(self, cr, uid, ids, context=None):
+        inv = self.browse(cr, uid, ids[0], context=context)
+        print inv.amount_total, inv.partner_id, inv.check_total, "tot tot toto tot tot tot"
+        #point_dict={3000:10, 5000:15, 8000:20, 10000:25, 15000:30, 20000:50,}
+        commission_points=self.pool.get('cus.commission.master')
+        com_point_list=commission_points.search(cr, uid, [('name','=',inv.partner_id.id)])
+        print com_point_list,"PPOOIIUUYY&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^@@@@@@@@",len(com_point_list)
+        if not com_point_list:
+            print "Empty"
+            raise osv.except_osv(_('WARNING !'),
+                    _('This Customer has No Points !'))
+        else:
+            part_id = self.pool.get('cus.commission.master').search(cr, uid, [('name','=',inv.partner_id.id)])
+            com_br=self.pool.get('cus.commission.master').browse(cr,uid,part_id[0])
+            print com_br.name,"^^^^^^^^^^^^^^",com_br.com_points,"************8********", com_br.commission_amt,"{{{{{{{{{{{{{{{{}"
+            less_amt = inv.amount_total-com_br.commission_amt
+            print less_amt, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",ids[0]
+            #self.pool.get('account.invoice').write(cr, uid, ids[0],{'less_amt': less_amt})
+            self.pool.get('account.invoice').write(cr, uid, ids[0],{'amount_total': less_amt, 'check_total': less_amt, 'amt_bool1':1})
+            ss = self.pool.get('account.invoice').browse(cr, uid, ids[0], context=context)
+            print ss, "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss"
+            x = cr.execute(""" update account_invoice  set amount_total= %s where id=%s """,(less_amt,ids[0]))
+            self.pool.get('cus.commission.master').write(cr, uid, part_id[0], {'com_points':0, 'commission_amt':0})
+            print x,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxx"
+            print inv.amount_total, "ADTWE AFTER AFTER AFTER", ss.amount_total, "BEFORE before BeEFORE"
+            self.pool.get('com.point.history').create(cr, uid,{
+                                                                'may2on':com_br.id,
+                                                                'date': inv.date_invoice or ' ',
+                                                                'in_id':inv.id,
+                                                                'name':inv.number,
+                                                                'c_point': inv.point_p,
+                                                                'c_amount':inv.amount_a,
+                                                                'i_amount':inv.amount_total,
+                                                                })
         return True
         
         
+        
+        def _amount_all(self, cr, uid, ids, name, args, context=None):
+            res = {}
+            for invoice in self.browse(cr, uid, ids, context=context):
+                res[invoice.id] = {
+                    'amount_untaxed': 0.0,
+                    'amount_tax': 0.0,
+                    'amount_total': 0.0
+                }
+                print res[invoice.id]['less_amt'], "_amount_all _amount_all"
+                for line in invoice.invoice_line:
+                    res[invoice.id]['amount_untaxed'] += line.price_subtotal
+                for line in invoice.tax_line:
+                    res[invoice.id]['amount_tax'] += line.amount
+                print res[invoice.id]['less_amt'], "_amount_all _amount_all"
+                res[invoice.id]['amount_total'] = res[invoice.id]['amount_tax'] + res[invoice.id]['amount_untaxed']
+                if invoice.less_amt > 0:
+                    res.update({'less_amt':invoice.less_amt})
+                    print res[invoice.id]['less_amt'], "_amount_all _amount_all"
+                    res[invoice.id]['amount_total'] = res[invoice.id]['amount_total'] - res[invoice.id]['less_amt']
+            return res
+        
 invoice()
-
-
-    #~ _defaults = {
-         #~ 'alloc_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-     #~ }
-#~ 
-    #~ def onchange_entity_data_id(self, cr, uid, ids, entity_data_id):
-        #~ val={}
-        #~ if entity_data_id:
-            #~ x=self.pool.get('entity.data').browse(cr, uid, entity_data_id)
-            #~ val['enty_no']= x.ent_num #  { 'value' : {'enty_no':x.ent_num} } 
-        #~ return {'value':val}
-#~ 
-#~ ####3#Seq Id Generation#########
-    #~ def tick_generation(self, cr, uid, ids,*args):
-        #~ for o in self.browse(cr, uid, ids, context={}):
-            #~ seq_no = self.pool.get('ir.sequence').get(cr, uid, 'ticket.number.seq')
-            #~ print o, "===", o.id, o.sales_person_id, o.alloc_date, o.entity_data_id.id, o.entity_data_id.ent_num,'=====',o.sales_person_id.context_section_id.code
-            #~ jx=self.pool.get('ticket.list').create(cr, uid, 
-                        #~ {'name': o.sales_person_id.context_section_id.code+o.sales_person_id.code+str(time.strftime("%d%m%Y"))+seq_no, 
-                        #~ 'add_tick_id':o.id, 
-                        #~ 'sal_per_id':o.sales_person_id.id, 
-                        #~ 'allocation_date':o.alloc_date,
-                        #~ 'remarks':o.remarks,
-                        #~ 'entity_data_id':o.entity_data_id.id,
-                        #~ 'enty_no':o.entity_data_id.ent_num or 'o',
-                        #~ })
-        #~ return True
-#~ 
-#~ ticket_allocation()
-
-#~ class ticket_list(osv.osv):
-    #~ _name="ticket.list"
-    #~ _description="Ticket list"
-    #~ _order = "priority"
-    #~ _columns = {
-    #~ 'name':fields.char('Ticket number', size=256),
-    #~ 'add_tick_id':fields.many2one('ticket.allocation', 'Tick',ondelete='cascade'),
-    #~ 'sal_per_id':fields.many2one('res.users','Sales Person'),
-    #~ 'allocation_date':fields.datetime('Allocation Date'),
-    #~ 'remarks':fields.char('Remark',size=256),
-    #~ 'entity_data_id':fields.many2one('entity.data','Entity'),
-    #~ 'enty_no':fields.char('Entity No',size=256),
-    #~ 'state':fields.selection([('new','New'),('assigned','Assigned')],'state'),
-#~ ################################################################################################################    
-    #~ 'color': fields.integer('Color Index'),
-    #~ 'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
-                                         #~ readonly=True, required=False),
-        #~ 'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
-											#~ 
-    #~ #  in complete
-    #~ }
-    #~ 
-    #~ _defaults={
-          #~ 'state': 'new',
-          #~ 'kanban_state': 'normal',
-          #~ 'priority': '2',
-          #~ 'color': 5}
-          #~ 
-#~ 
-#~ 
-    #~ def set_priority(self, cr, uid, ids, priority):
-        #~ """Set task priority
-        #~ """
-        #~ return self.write(cr, uid, ids, {'priority' : priority})
-#~ 
-    #~ def set_high_priority(self, cr, uid, ids, *args):
-        #~ """Set task priority to high
-        #~ """
-        #~ print ids,"))))))))))))))))))))))))))))))))"
-        #~ return self.set_priority(cr, uid, ids, '1')
-#~ 
-    #~ def set_normal_priority(self, cr, uid, ids, *args):
-        #~ """Set task priority to normal
-        #~ """
-        #~ return self.set_priority(cr, uid, ids, '2')
-        #~ 
-    #~ def set_kanban_state_blocked1(self, cr, uid, ids, context=None): 
-        #~ self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
-#~ 
-    #~ def set_kanban_state_normal1(self, cr, uid, ids, context=None):
-        #~ self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
-#~ 
-    #~ def set_kanban_state_done1(self, cr, uid, ids, context=None):
-        #~ self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
-        #~ 
-#~ ################################################################################################################        
-#~ 
-#~ ticket_list()

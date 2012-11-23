@@ -11,8 +11,22 @@
                 <group colspan="4" col="7">
 	               <field name="name" />  
 	               <field name="com_points"/>  
+                   <field name="commission_amt"/>
                 </group>
-                
+                <notebook>
+                <page string='Commission History'>
+                   <field name="on2may" nolabel="1" >
+                       <tree string="Points History">
+                           <field name="date"/>
+                           <field name="name"/>
+                           <field name="c_point"/>
+                           <field name="c_amount"/>
+                           <field name="i_amount"/>
+                           <field name="aft_inv_gen" invisible="1"/>
+                        </tree>
+                       </field>
+                       </page>
+                </notebook>
             </form>
             </field>
         </record>
@@ -25,6 +39,7 @@
                 <tree string ="Customer Points"> 
 	               		<field name="name"/>  
 	               		<field name="com_points"/>  
+                        <field name="commission_amt"/>
                 </tree>
             </field>	
         </record>
@@ -48,8 +63,19 @@
            <field name="type">form</field>
            <field name="inherit_id" ref="account.invoice_form"/>
            <field name="arch" type="xml">
+            
+               <field name="amount_total" position="before">
+                    <field name="amount_a"/>
+                    <field name="point_p"/>
+               </field>
+            
+               
            <button name="invoice_open" position="after">
-               <button name="get_commission_point" type="object" string="Get Points" states="open" icon="gtk-go-forward"/>
+               <field name="amt_bool" invisible="1"/>
+               <field name="amt_bool1" invisible="1" />
+<!--               states="draft,proforma2"-->
+               <button name="get_commission_point" type="object" attrs="{'invisible' : [('amt_bool','=', 'False')]}" string="Get Points"  icon="gtk-go-forward"/>
+               <button name="use_comm_points" type="object" attrs="{'invisible' : [('amt_bool1','=', 'False')]}" string="Use Points"  icon="gtk-go-forward" confirm="Do you Confirm?"/>
            </button>
            </field>
         </record>
@@ -81,6 +107,7 @@
             <field name="model">commission.points.master</field>
             <field name="arch" type="xml">
                 <tree string ="Commission Points Value"> 
+                    <field name="name"/>
 	               <field name="amt_starts"/>  
                    <field name="amt_ends"/>  
                    <field name="points"/>  

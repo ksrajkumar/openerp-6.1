@@ -57,10 +57,12 @@
         </record>
 
         <menuitem id="medical_survey_menu" name="Survey"/>
+<!--
         <menuitem
             action="medical_quest_survey_form1"
             id="menu_meical_quest_survey_id"
             parent="medical_survey_menu" name="Medical Questionnarie Survey" sequence='2'/>
+-->
         
    </data>
 </openerp>

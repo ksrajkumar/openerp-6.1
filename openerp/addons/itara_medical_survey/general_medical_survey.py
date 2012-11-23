@@ -49,6 +49,8 @@ class general_medical_survey(osv.osv):
      'med_for_dep_name':fields.char('Medicine for Depression name',size=128),
      'med_for_dep_amt':fields.char('Medicine for Depression amount', size=128),
      'oppor_link_id':fields.char('Opportunity link id',size=64),
+     'physical_activity_id': fields.one2many('physical.activity', 'name_id', 'Physical Activity'),
+     'prefered_physical_activity':fields.char('Preferred Physical Activity', size=512),
     
     }
     

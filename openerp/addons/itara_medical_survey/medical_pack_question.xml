@@ -14,7 +14,10 @@
 			<form string="Requirements">
 				<field name="name"/>
 				<field name="code"/>	
+
                                 <separator string="Questionnaire" colspan="2"/>
+                <notebook colspan="5">
+                <page string="Questionnaire Line">
                                 <field colspan="4" mode="tree,form" name="pack_line" nolabel="1" widget="one2many_list">
 				<form string="Questionnaire Line">
        		        		<field name="question_id"/>
@@ -29,7 +32,10 @@
                         	</tree>
                                 </field>  
                         							
-			</form>					
+			</page>
+                </notebook>
+                </form>
+								
 		</field>
 	</record>
 
@@ -85,5 +91,28 @@
             <field name="view_mode">tree,form</field>            
         </record>
         <menuitem action="data_collect_every_quest_action" id="menu_data_collect_every_quest_action" parent="menu_question_collect_master" name="Questionnaire"/>
+
+        <record id="physical_activity_many_form" model="ir.ui.view">
+            <field name="name">physical.activity.many.form</field>
+            <field name="model">physical.activity.many</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Physical Activity">
+		            <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="physical_activity_many_tree" model="ir.ui.view">
+            <field name="name">physical.activity.many.tree</field>
+            <field name="model">physical.activity.many</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Physical Activity">
+		            <field name="name"/>
+                </tree>
+            </field>
+        </record>
     </data>
 </openerp>

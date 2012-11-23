@@ -143,6 +143,7 @@ class crm(osv.osv):
                 #print 'userid'
                 self.write(cr,uid,ids,{'move_user_id':False,'move_sale_department':False})
                 #print 'move_id'
+                self.write(cr,uid,ids,{'move_state':'moved'})
                 self.pool.get('move.link').create(cr,uid,mov,context=context)
                 value = {
                 'name': _('Leads'),
@@ -198,10 +199,12 @@ class crm(osv.osv):
     'move_sale_department':fields.many2one('crm.case.section', 'Sales Team'),
     'move_user_id':fields.many2one('res.users', 'Salesman'),
     'move_hist': fields.one2many('move.link','move_id','Movement History',readonly=True),
+    'move_state':fields.selection([('moved','Moved'),('-','-')],'Move State'),
      }
     _defaults = {
          'id_number': lambda obj, cr, uid, context: '/',
          'user_section_id': _get_section,
+         'move_state': lambda *a: '-',
      }
 
 

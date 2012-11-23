@@ -24,22 +24,34 @@
  field hidden in opportunity  
 -->
             <field name = "user_id" position="before">
+            <newline/>
             <field name="user_section_id"/>
             </field>
-		    	<xpath expr='/form/group/button[@string="Schedule/Log Call"]' position='after'>
+		    	<xpath expr='/form/group/button[@string="Schedule Meeting"]' position='after'>
 		    	<newline/>
-			        <group colspan="4" col="7">
+<!--			        <group colspan="4" col="7">-->
+<!--			            <newline/>-->
     			        <field name="birth_date" string="Birth Date" on_change="onchange_birth_date(birth_date)"/>
     			        <field name="age" string="Age"/>
+<!--    			        </group>-->
+<!--    			        </xpath>-->
+<!--    			        <xpath expr='/form/group/button[@string="Convert to Invoice"]' position='after'>-->
+<!--                        <button string="Convert to Invoice">-->
+<!--    			        <group colspan="2" col="4">-->
+    			        <newline/>
     			        <field name="tick_link_id"/>
+<!--    			    </group>-->
+<!--    			        <newline/>-->
                         <field name="id_number"/>
                         <group colspan='1' col='5'>
                         <button name="id_generation" string="Generate ID" type="object" />
                         </group>
+<!--                        <newline/>-->
                        <button name="action_makesurvey" type="object" string="Survey" icon="gtk-redo" />
-                       <button name="action_makeinvoice" type="object" string="Pay" icon="gtk-redo" />
-        			</group>
+                       <button name="action_makeinvoice" type="object" string="Pay" icon="gtk-redo" invisible="1"/>
+<!--        			</group>-->
         			<newline/>
+<!--        			</button>-->
                </xpath>
 
         <xpath expr="/form/notebook/page[@string='Lead']/group/field[@name='type_id']" position='before'>
@@ -122,6 +134,7 @@
                 <group col='2' colspan='2'>
                     <field name = "move_sale_department"  />
                     <field name = "move_user_id" domain="[('context_section_id', '=', move_sale_department)]"/>
+                    <field name="move_state" readonly="True"/>
                 </group>
 
 
@@ -155,6 +168,24 @@
                 <field name="user_id" position="before">
                 <field name="email_text"/>
                 <field name="mobile"/>
+                </field>
+                <filter string="Pending" position="after">
+                <filter icon="terp-check"
+                    string="Moved Leads"  help="Leads From Others"
+                    name="move_state"
+                    domain="[('move_state','=','moved')]"/>
+                </filter>
+            </field>
+            </record>
+            
+        <record model="ir.ui.view" id="crm_case_tree_lead">
+        	<field name="name">crm.case.tree.lead</field>
+        	<field name="model">crm.lead</field>
+        	<field name="type">tree</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+	     	<field name="arch" type="xml">
+                <field name="state" position="after">
+                <field name="move_state"/>
                 </field>
             </field>
             </record>

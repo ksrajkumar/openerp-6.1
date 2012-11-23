@@ -26,6 +26,7 @@
                             <field name="med_for_dep_name"/>
                             <field name="med_for_dep_amt"/>
                         </page>
+                        
                         <page string="Question pack">
                             <field name="quest_pack_id"/> <!-- on_change="onchange_question_pack(quest_pack_id)"/> -->
                             <button name="onchange_question_pack" string="Generate ques" type="object" />
@@ -36,13 +37,38 @@
                                 <field name='yesno'/>
                                 <field name='remark'/>
                             </form>
-                            <tree string="Questi Line">
+                            <tree string="Questi Line" editable="bottom">
        		        		<field name="questions_id"/>
                         		<field name="yesno"/> 
                         		<field name="remark"/>
                         	</tree>
-                            </field>  
-                        </page>
+                            </field>
+<!--                        </page>-->
+
+<!--                        <separator string="Physical Activity" colspan="2"/>-->
+                            <newline/>
+                            <group colspan="2" col="2">
+                            <field colspan="4"  name="physical_activity_id" nolabel="1" widget="one2many_list">
+                                
+                                <form string="Physical Activity">
+                                    <field name="name"  widget="selection" colspan="4"/>
+
+                                </form>
+                                
+<!--                                <group colspan="2" col="4">-->
+
+                                <tree string="Physical Activity" editable="bottom">
+                                    <field name="name"/>
+                                </tree>
+
+                                
+                            </field>
+                            </group>
+                            <group colspan="2" col="2">
+<!--                            <separator string=" " colspan="2"/>-->
+                            <field name="prefered_physical_activity"/>
+                            </group>
+                        </page>  
             </notebook>
             </form>
             </field>

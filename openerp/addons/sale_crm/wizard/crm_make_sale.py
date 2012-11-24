@@ -171,12 +171,12 @@ class crm_make_sale(osv.osv_memory):
         sal_b=self.pool.get('sale.order')
         print sal_b,"LLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
         sal_b.action_wait(cr, uid, new_ids, context=None) 
-        sal_b.action_ship_create(cr, uid, new_ids, context=None)
+        sal_b.action_ship_create(cr, uid, new_ids)
         #sal_b.test_state(cr, uid, new_ids, context=None)   
         #sal_b.procurement_lines_get(cr, uid, new_ids, context)
         sal_b.manual_invoice(cr, uid, new_ids, context=None)
         c=sal_b.action_invoice_create( cr, uid, new_ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None)
-        
+        print context,'cccccccccccccccccccccccccccccccccccccccc'
         return {
             'name': _('Customer Invoices'),
             'view_type': 'form',

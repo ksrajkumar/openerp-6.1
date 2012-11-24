@@ -38,20 +38,24 @@ class cus_commission_master(osv.osv):
         res={}
         print 'called'
         his_c = self.browse(cr, uid, ids)
+        print his_c, "f888888888888888888888888*************************************"
         for m in his_c:
             sub_id = self.pool.get('com.point.history').search(cr,uid,[('may2on','=',m.id)])
             sub_br = self.pool.get('com.point.history').browse(cr,uid,sub_id)
+            print sub_br,'ssssssssssssssssssssssssssssssssss'
             for his_class in sub_br:
                 invoice_id = his_class.in_id
+                print invoice_id, "INVOICE INVOICEINVOICEINVOICEINVOICEINVOICEINVOICE" 
                 inv_class = self.pool.get('account.invoice').search(cr, uid, [('id','=',invoice_id)])
                 inv_br = self.pool.get('account.invoice').browse(cr, uid, inv_class)
+                print inv_br,'inv_br'
                 for i in inv_br:
-                    print i.number,'------',i.date_invoice,'--------',his_class.id
+                    print i.number,'------',i.date_invoice
                     self.pool.get('com.point.history').write(cr,uid, his_class.id, {
                     'date':str(i.date_invoice),
                     'name':str(i.number)
                     })
-                    res[m.id]= 87
+                    res[his_class.id]= 87
         return res
     
     
@@ -116,32 +120,56 @@ class invoice(osv.osv):
     }
     
     def get_commission_point(self, cr, uid, ids, context=None):
+        print ids,"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"
         inv = self.browse(cr, uid, ids[0], context=context)
+        print inv.amount_total, inv.partner_id,"tot tot toto tot tot tot"
+        #point_dict={3000:10, 5000:15, 8000:20, 10000:25, 15000:30, 20000:50,}
         commission_points=self.pool.get('commission.points.master')
-        com_point_list=commission_points.search(cr, uid, [('amt_starts','<=',inv.amount_total),('amt_ends','>=',inv.amount_total)])
-        if not com_point_list:
-            raise osv.except_osv(_('WARNING !'),
-                    _('This Invoice Amount has No Points !'))
-        else:
-            comm_point_br=commission_points.browse(cr, uid, com_point_list, context=None)
-            for i in comm_point_br:
-                com_points = i.points
-                com_point_amt = i.point_amt
-            part_id = self.pool.get('cus.commission.master').search(cr, uid, [('name','=',inv.partner_id.id)])
-            if len(part_id) > 0:
-                com=self.pool.get('cus.commission.master').browse(cr,uid,part_id[0])
-                self.pool.get('cus.commission.master').write(cr, uid,part_id[0],{'name':inv.partner_id.id, 'com_points': com_points, 'commission_amt':com_point_amt })  
-                self.write(cr, uid, ids,{'amt_bool': True, 'point_p':com_points , 'amount_a':com_point_amt } )
+        com_point_list=commission_points.search(cr, uid, [('id','>=',1)])
+        comm_point_br=commission_points.browse(cr, uid, com_point_list, context=None)
+                
+        p_dic,dic_point,dic_amt={},{},{}
+        len_point=len(comm_point_br)
+        print len_point
+        for c in range(len_point):
+            each_dic_poin={comm_point_br[c].amt_starts:comm_point_br[c].points}
+            each_dic_amt={comm_point_br[c].amt_starts:comm_point_br[c].point_amt}
+            dic_point.update(each_dic_poin)
+            dic_amt.update(each_dic_amt)
+            if c < len_point-1:
+                print c
+                each_dic={comm_point_br[c].amt_starts:comm_point_br[c+1].amt_starts}
+                print each_dic,"))))))))))))))))))))))))))))))))))))"
+                p_dic.update(each_dic)
             else:
-                self.pool.get('cus.commission.master').create(cr, uid,{'name':inv.partner_id.id, 'com_points': com_points, 'commission_amt': com_point_amt }) 
-                self.write(cr, uid, ids,{'amt_bool': True, 'point_p':com_points, 'amount_a':com_point_amt } )
+                each_dic={comm_point_br[c].amt_starts:comm_point_br[c].amt_ends}
+                print each_dic,"((((((((((((((((((((((((((((((((((((((((((("
+                p_dic.update(each_dic)
+        
+        part_id = self.pool.get('cus.commission.master').search(cr, uid, [('name','=',inv.partner_id.id)])
+        if len(part_id) > 0:
+            com=self.pool.get('cus.commission.master').browse(cr,uid,part_id[0])
+            print com,"LLLLLLLLLLLLLLLLLLLLLLL",com.id
+        print part_id,"partner partner partner partner"
+        for k,v in p_dic.iteritems():
+            print k,v, "LKJJJJJJJJJJJJJJJJJJJJ"
+            if inv.amount_total >= k and inv.amount_total < v:
+                if len(part_id) > 0:
+                    self.pool.get('cus.commission.master').write(cr, uid,part_id[0],{'name':inv.partner_id.id, 'com_points': dic_point[k]+com.com_points, 'commission_amt':dic_amt[k]+com.commission_amt })  #point_dict[3000]+com.com_points})
+                    self.write(cr, uid, ids,{'amt_bool': True, 'point_p':dic_point[k]+com.com_points , 'amount_a':dic_amt[k]+com.commission_amt } )
+                else:
+                    self.pool.get('cus.commission.master').create(cr, uid,{'name':inv.partner_id.id, 'com_points': dic_point[k], 'commission_amt': dic_amt[k] }) #point_dict[3000]})
+                    self.write(cr, uid, ids,{'amt_bool': True, 'point_p':dic_point[k] , 'amount_a':dic_amt[k] } )
 
         return True
     
     def use_comm_points(self, cr, uid, ids, context=None):
         inv = self.browse(cr, uid, ids[0], context=context)
+        print inv.amount_total, inv.partner_id, inv.check_total, "tot tot toto tot tot tot"
+        #point_dict={3000:10, 5000:15, 8000:20, 10000:25, 15000:30, 20000:50,}
         commission_points=self.pool.get('cus.commission.master')
         com_point_list=commission_points.search(cr, uid, [('name','=',inv.partner_id.id)])
+        print com_point_list,"PPOOIIUUYY&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^@@@@@@@@",len(com_point_list)
         if not com_point_list:
             print "Empty"
             raise osv.except_osv(_('WARNING !'),
@@ -149,11 +177,17 @@ class invoice(osv.osv):
         else:
             part_id = self.pool.get('cus.commission.master').search(cr, uid, [('name','=',inv.partner_id.id)])
             com_br=self.pool.get('cus.commission.master').browse(cr,uid,part_id[0])
+            print com_br.name,"^^^^^^^^^^^^^^",com_br.com_points,"************8********", com_br.commission_amt,"{{{{{{{{{{{{{{{{}"
             less_amt = inv.amount_total-com_br.commission_amt
+            print less_amt, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",ids[0]
+            #self.pool.get('account.invoice').write(cr, uid, ids[0],{'less_amt': less_amt})
             self.pool.get('account.invoice').write(cr, uid, ids[0],{'amount_total': less_amt, 'check_total': less_amt, 'amt_bool1':1})
             ss = self.pool.get('account.invoice').browse(cr, uid, ids[0], context=context)
+            print ss, "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss"
             x = cr.execute(""" update account_invoice  set amount_total= %s where id=%s """,(less_amt,ids[0]))
             self.pool.get('cus.commission.master').write(cr, uid, part_id[0], {'com_points':0, 'commission_amt':0})
+            print x,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxx"
+            print inv.amount_total, "ADTWE AFTER AFTER AFTER", ss.amount_total, "BEFORE before BeEFORE"
             self.pool.get('com.point.history').create(cr, uid,{
                                                                 'may2on':com_br.id,
                                                                 'date': inv.date_invoice or ' ',

@@ -74,6 +74,9 @@
                 <form string="Additional Contacts">
                         <group colspan="2" col="4">
                                         <field name="name"/>
+                                <group colspan="2" col="4">
+                                        <field name="last_name" colspan="4"/>
+                                </group>
                                         <field name="street" colspan="4"/>
                                         <field name="street2" colspan="4"/>
                                         <field name="zip"/>
@@ -317,6 +320,21 @@
                 <tree string ="Move History"> 
 	               		<field name="name"/>  
                 </tree>
+            </field>	
+        	</record>
+            
+            
+            
+            <record id="sale_team_member_hide" model="ir.ui.view">
+            <field name="name">sale.team.member.hide</field>
+            <field name="type">form</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="crm.crm_case_section_view_form"/>
+            <field name="arch" type="xml">
+                <field name="member_ids" position = "attributes"> <attribute name = "invisible">1</attribute></field>
+                <xpath expr='/form/notebook/page[@string="Sales Team"]/group/separator[@string="Team Members"]' position="attributes">
+                    <attribute name = "invisible">1</attribute> 
+                </xpath>
             </field>	
         	</record>
             

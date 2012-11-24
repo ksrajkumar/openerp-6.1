@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record model="ir.ui.view" id="refund_survey_form">
+        	<field name="name">refund.survey.form</field>
+        	<field name="model">account.invoice</field>
+        	<field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+	     	<field name="arch" type="xml">
+                <field name="name" position="after">
+                    <button name="action_refundsurvey" type="object" string="Survey" icon="gtk-redo" attrs="{'invisible':[('type','!=','out_refund')]}"/>
+                </field>
+            </field>
+        </record>
+        </data>
+</openerp>

@@ -12,6 +12,7 @@
 	               <field name="name" />  
 	               <field name="com_points"/>  
                    <field name="commission_amt"/>
+                   <field name="aft_inv_gen" invisible="1"/>
                 </group>
                 <notebook>
                 <page string='Commission History'>
@@ -22,7 +23,6 @@
                            <field name="c_point"/>
                            <field name="c_amount"/>
                            <field name="i_amount"/>
-                           <field name="aft_inv_gen" invisible="1"/>
                         </tree>
                        </field>
                        </page>

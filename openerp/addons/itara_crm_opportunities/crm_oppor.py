@@ -36,7 +36,8 @@ class opp_contact_address(osv.osv):
     _description="Oppur cont add fields"
     _columns={
     'add_cont_id':fields.many2one("crm.lead", 'Addional contact'),
-    'name':fields.char("Contact Name",size=68),
+    'name':fields.char("Contact Name",size=64),
+    'last_name':fields.char("",size=64),
     'street':fields.char("Street", size=128),
     'street2':fields.char("Street2", size=128),
     'zip':fields.char("Zip",size=24),
@@ -109,8 +110,8 @@ class crm(osv.osv):
                 seq_no = self.pool.get('ir.sequence').get(cr, uid, 'crm.lead.form.seq')
                 self.write(cr, uid, o.id, {'id_number': seq_no,})
             else:
-                raise osv.except_osv(_('ID No Alredy Generated !'),
-                    _('ID No Alredy Generated!'))
+                raise osv.except_osv(_('ID No Already Generated !'),
+                    _('ID No Already Generated!'))
         return True
         
         

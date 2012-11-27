@@ -44,6 +44,7 @@
             </field>	
         </record>
 
+
         <record id="action_customer_commission_form1" model="ir.actions.act_window">
             <field name="name">Customer Points</field>
             <field name="type">ir.actions.act_window</field>

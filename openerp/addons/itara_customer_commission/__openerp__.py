@@ -28,7 +28,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['product','base','account'],
     'init_xml': [ ],
-    'update_xml': ['customer_commission.xml'],
+    'update_xml': ['customer_commission.xml','customer_commission_board_view.xml'],
     'demo_xml': [ ],
     'test': [ ],
     'installable': True,

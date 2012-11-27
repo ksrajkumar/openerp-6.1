@@ -12,9 +12,12 @@
                 <field name="name" on_change="onchange_customer_invoice(name)"/>
                 <field name="phone_number"/>
                 <field name="email"/>
+                <field name="email_customer"/>
+                <field name="email_period"/>
                 <field name="current_weight"/>
                 <group colspan="4">
                 <field name="notes"/>
+                <field name="success_stories"/>
                 </group>
                 <notebook colspan="5">
                         <page string="Current Status">

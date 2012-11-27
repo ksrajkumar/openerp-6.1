@@ -46,8 +46,11 @@ class customer_support_survey(osv.osv):
      'name':fields.many2one('res.partner', 'Name'),
      'email':fields.char('Email', size=128),
      'phone_number':fields.char('Phone Number', size=24),
-     'current_status_id': fields.one2many('current.status', 'name_id', 'Current Status'),     
+     'email_customer':fields.selection([('activate', 'Activate'),('deactivate', 'Deactivate'), ('notvalid', 'Not Valid')], 'Emails to Customer'),
+     'email_period':fields.char('Email sending period', size=128),
+     'current_status_id': fields.one2many('current.status', 'name_id', 'Current Status'),            
      'notes':fields.text('Notes'),
+     'success_stories':fields.text('Success Stories'),
      'current_weight':fields.many2one('current.weight', 'Current Weight'),
      'custo_hist': fields.many2many('account.invoice','account_invoice_relation','account_id','invoice_id','History'),
     }

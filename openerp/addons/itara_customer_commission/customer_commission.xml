@@ -44,7 +44,6 @@
             </field>	
         </record>
 
-
         <record id="action_customer_commission_form1" model="ir.actions.act_window">
             <field name="name">Customer Points</field>
             <field name="type">ir.actions.act_window</field>
@@ -54,7 +53,8 @@
             <field name="view_id" ref="customer_commission_tree1"/>              
         </record>
 
-    <menuitem id="menu_view_customer_commission1" name="Customer Points" />
+    <menuitem id="menu_view_customer_commission1" name="Customer Points" web_icon="images/icon_point.png"
+                                    web_icon_hover="images/hover_coin.jpg" />
     <menuitem action="action_customer_commission_form1" id="menu_view_customer_commission_points" parent="menu_view_customer_commission1" sequence="1"/>
 
         <record id="view_inv_customer_for_commission" model="ir.ui.view">

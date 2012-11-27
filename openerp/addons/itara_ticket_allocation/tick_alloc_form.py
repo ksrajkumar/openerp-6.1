@@ -127,7 +127,7 @@ class ticket_list(osv.osv):
 ################################################################################################################    
     'color': fields.integer('Color Index'),
     'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
-                                         readonly=True, required=False),
+                                          required=False),
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
 											
     #  in complete
@@ -137,7 +137,7 @@ class ticket_list(osv.osv):
           'state': 'new',
           'kanban_state': 'normal',
           'priority': '2',
-          'color': 5}
+          'color': 0}
           
 
 
